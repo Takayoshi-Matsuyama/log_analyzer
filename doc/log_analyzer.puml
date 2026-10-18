@@ -1,0 +1,7 @@
+@startuml log_analyzer
+
+title Log Analyzer
+
+class FileReader {}
+
+@enduml
