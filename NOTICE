@@ -2,4 +2,9 @@
 
 This project uses the following third party open source:
 
-* PySide6 (https://pypi.org/project/PySide6/)
+* PySide6 (https://pypi.org/project/PySide6/)  
+  License: https://www.qt.io/development/download-open-source  
+  LGPL: https://www.gnu.org/licenses/lgpl-3.0.en.html#license-text
+  
+
+
