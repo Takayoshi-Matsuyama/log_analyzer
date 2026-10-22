@@ -47,6 +47,9 @@ class DefaultToolFactory {}
 
 IToolFactory <|-- DefaultToolFactory
 
+DefaultToolFactory --> DefaultFileFilter
+DefaultToolFactory --> DefaultLineAnalyzer
+
 class LogAnalysisService
 {
     +register_file_filter(file_filter: IFileFilter): void
@@ -60,10 +63,18 @@ class MainWindow {}
 
 QMainWindow <|-- MainWindow
 
+class FactoryProvider
+ {
+    +get_tool_factory(): IToolFactory
+}
+
 class Main {}
+
+FactoryProvider --> DefaultToolFactory
 
 LogAnalysisService --> IFileFilter
 LogAnalysisService --> ISingleLineAnalyzer
+Main --> FactoryProvider
 Main --> IToolFactory
 Main --> LogAnalysisService
 Main --> MainWindow
