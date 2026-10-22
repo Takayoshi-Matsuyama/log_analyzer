@@ -20,18 +20,37 @@ title Log Analyzer
 
 interface IFileFilter
 {
-    +is_analysis_target(filename: string): boolean
+    +is_analysis_target(filename: string): (result :boolean, file_type: string)
 }
+
+class DefaultFileFilter {}
+
+IFileFilter <|-- DefaultFileFilter
 
 interface ISingleLineAnalyzer
 {
     +analyze_line(line: string): boolean
 }
 
+class DefaultLineAnalyzer {}
+
+ISingleLineAnalyzer <|-- DefaultLineAnalyzer
+
+
+interface IToolFactory
+{
+    +create_file_filter(): IFileFilter
+    +create_line_analyzer(): ISingleLineAnalyzer
+}
+
+class DefaultToolFactory {}
+
+IToolFactory <|-- DefaultToolFactory
+
 class LogAnalysisService
 {
     +register_file_filter(file_filter: IFileFilter): void
-    +register_line_analyzer(line_analyzer: ISingleLineAnalyzer): void
+    +register_line_analyzer(file_type: string, line_analyzer: ISingleLineAnalyzer): void
     +analyze(root_file_path: String): void
 }
 
@@ -45,7 +64,9 @@ class Main {}
 
 LogAnalysisService --> IFileFilter
 LogAnalysisService --> ISingleLineAnalyzer
+Main --> IToolFactory
 Main --> LogAnalysisService
 Main --> MainWindow
+MainWindow --> LogAnalysisService
 
 @enduml
