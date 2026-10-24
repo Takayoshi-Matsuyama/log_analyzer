@@ -16,74 +16,74 @@
 
 title Log Analyzer
 
-interface IFileAnalyzer
+interface loghelper.IFileAnalyzer
 {
     +filter_file(file_path_name: string): (is_analysis_target: boolean, file_type: string)
 }
 
-class DefaultFileAnalyzer {}
+class loghelper.DefaultFileAnalyzer {}
 
-IFileAnalyzer <|-- DefaultFileAnalyzer
+loghelper.IFileAnalyzer <|-- loghelper.DefaultFileAnalyzer
 
-interface ISingleLineAnalyzer
+interface loghelper.ISingleLineAnalyzer
 {
     +filter_line(line: string): boolean
 }
 
-class DefaultLineAnalyzer {}
+class loghelper.DefaultLineAnalyzer {}
 
-ISingleLineAnalyzer <|-- DefaultLineAnalyzer
+loghelper.ISingleLineAnalyzer <|-- loghelper.DefaultLineAnalyzer
 
 
-interface IToolFactory
+interface loghelper.IToolFactory
 {
-    +create_file_filter(): IFileAnalyzer
-    +create_line_analyzer(): ISingleLineAnalyzer
+    +create_file_filter(): loghelper.IFileAnalyzer
+    +create_line_analyzer(): loghelper.ISingleLineAnalyzer
 }
 
-class DefaultToolFactory {}
+class loghelper.DefaultToolFactory {}
 
-IToolFactory <|-- DefaultToolFactory
+loghelper.IToolFactory <|-- loghelper.DefaultToolFactory
 
-DefaultToolFactory --> DefaultFileAnalyzer
-DefaultToolFactory --> DefaultLineAnalyzer
+loghelper.DefaultToolFactory --> loghelper.DefaultFileAnalyzer
+loghelper.DefaultToolFactory --> loghelper.DefaultLineAnalyzer
 
-class LogAnalysisService
+class loghelper.LogAnalysisService
 {
-    -line_analyzer_dict: Dictionary<string, ISingleLineAnalyzer>
-    +register_file_filter(file_filter: IFileAnalyzer): void
-    +register_line_analyzer(file_type: string, line_analyzer: ISingleLineAnalyzer): void
+    -line_analyzer_dict: Dictionary<string, loghelper.ISingleLineAnalyzer>
+    +register_file_filter(file_filter: loghelper.IFileAnalyzer): void
+    +register_line_analyzer(file_type: string, line_analyzer: loghelper.ISingleLineAnalyzer): void
     +scan_files(root_dir_path: string): void
 }
 
-LogAnalysisService --> IFileAnalyzer
-LogAnalysisService --> ISingleLineAnalyzer
+loghelper.LogAnalysisService --> loghelper.IFileAnalyzer
+loghelper.LogAnalysisService --> loghelper.ISingleLineAnalyzer
 
-class QMainWindow {}
+class PySide6.QMainWindow {}
 
-class MainWindow {}
+class loghelper.MainWindow {}
 
-QMainWindow <|-- MainWindow
+PySide6.QMainWindow <|-- loghelper.MainWindow
 
 entity setting_json
 {
-    "tool_factory": "DefaultToolFactory"
+    "tool_factory": "loghelper.DefaultToolFactory"
 }
 
 class FactoryProvider
  {
-    +get_tool_factory(): IToolFactory
+    +get_tool_factory(): loghelper.IToolFactory
 }
 
 FactoryProvider --> setting_json
-FactoryProvider --> DefaultToolFactory
+FactoryProvider --> loghelper.DefaultToolFactory
 
 class Main {}
 
 Main --> FactoryProvider
-Main --> IToolFactory
-Main --> LogAnalysisService
-Main --> MainWindow
-MainWindow --> LogAnalysisService
+Main --> loghelper.IToolFactory
+Main --> loghelper.LogAnalysisService
+Main --> loghelper.MainWindow
+loghelper.MainWindow --> loghelper.LogAnalysisService
 
 @enduml
