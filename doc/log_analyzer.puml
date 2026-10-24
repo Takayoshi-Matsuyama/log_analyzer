@@ -50,11 +50,14 @@ DefaultToolFactory --> DefaultLineAnalyzer
 
 class LogAnalysisService
 {
-    -analyzer_dictionary: Map<string, ISingleLineAnalyzer>
+    -line_analyzer_dict: Dictionary<string, ISingleLineAnalyzer>
     +register_file_filter(file_filter: IFileAnalyzer): void
     +register_line_analyzer(file_type: string, line_analyzer: ISingleLineAnalyzer): void
     +scan_files(root_dir_path: string): void
 }
+
+LogAnalysisService --> IFileAnalyzer
+LogAnalysisService --> ISingleLineAnalyzer
 
 class QMainWindow {}
 
@@ -62,17 +65,21 @@ class MainWindow {}
 
 QMainWindow <|-- MainWindow
 
+entity setting_json
+{
+    "tool_factory": "DefaultToolFactory"
+}
+
 class FactoryProvider
  {
     +get_tool_factory(): IToolFactory
 }
 
-class Main {}
-
+FactoryProvider --> setting_json
 FactoryProvider --> DefaultToolFactory
 
-LogAnalysisService --> IFileAnalyzer
-LogAnalysisService --> ISingleLineAnalyzer
+class Main {}
+
 Main --> FactoryProvider
 Main --> IToolFactory
 Main --> LogAnalysisService
