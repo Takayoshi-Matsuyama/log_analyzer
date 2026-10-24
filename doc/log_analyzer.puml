@@ -65,25 +65,25 @@ class azlog.MainWindow {}
 
 PySide6.QMainWindow <|-- azlog.MainWindow
 
-entity setting_json
+entity app.setting_json
 {
     "tool_factory": "azlog.DefaultToolFactory"
 }
 
-class FactoryProvider
+class app.FactoryProvider
  {
     +get_tool_factory(): azlog.IToolFactory
 }
 
-FactoryProvider --> setting_json
-FactoryProvider --> azlog.DefaultToolFactory
+app.FactoryProvider --> app.setting_json
+app.FactoryProvider --> azlog.DefaultToolFactory
 
-class Main {}
+class app.Main {}
 
-Main --> FactoryProvider
-Main --> azlog.IToolFactory
-Main --> azlog.LogAnalysisService
-Main --> azlog.MainWindow
+app.Main --> app.FactoryProvider
+app.Main --> azlog.IToolFactory
+app.Main --> azlog.LogAnalysisService
+app.Main --> azlog.MainWindow
 azlog.MainWindow --> azlog.LogAnalysisService
 
 @enduml
