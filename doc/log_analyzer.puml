@@ -16,74 +16,74 @@
 
 title Log Analyzer
 
-interface loghelper.IFileAnalyzer
+interface azlog.IFileAnalyzer
 {
     +filter_file(file_path_name: string): (is_analysis_target: boolean, file_type: string)
 }
 
-class loghelper.DefaultFileAnalyzer {}
+class azlog.DefaultFileAnalyzer {}
 
-loghelper.IFileAnalyzer <|-- loghelper.DefaultFileAnalyzer
+azlog.IFileAnalyzer <|-- azlog.DefaultFileAnalyzer
 
-interface loghelper.ISingleLineAnalyzer
+interface azlog.ISingleLineAnalyzer
 {
     +filter_line(line: string): boolean
 }
 
-class loghelper.DefaultLineAnalyzer {}
+class azlog.DefaultLineAnalyzer {}
 
-loghelper.ISingleLineAnalyzer <|-- loghelper.DefaultLineAnalyzer
+azlog.ISingleLineAnalyzer <|-- azlog.DefaultLineAnalyzer
 
 
-interface loghelper.IToolFactory
+interface azlog.IToolFactory
 {
-    +create_file_filter(): loghelper.IFileAnalyzer
-    +create_line_analyzer(): loghelper.ISingleLineAnalyzer
+    +create_file_filter(): azlog.IFileAnalyzer
+    +create_line_analyzer(): azlog.ISingleLineAnalyzer
 }
 
-class loghelper.DefaultToolFactory {}
+class azlog.DefaultToolFactory {}
 
-loghelper.IToolFactory <|-- loghelper.DefaultToolFactory
+azlog.IToolFactory <|-- azlog.DefaultToolFactory
 
-loghelper.DefaultToolFactory --> loghelper.DefaultFileAnalyzer
-loghelper.DefaultToolFactory --> loghelper.DefaultLineAnalyzer
+azlog.DefaultToolFactory --> azlog.DefaultFileAnalyzer
+azlog.DefaultToolFactory --> azlog.DefaultLineAnalyzer
 
-class loghelper.LogAnalysisService
+class azlog.LogAnalysisService
 {
-    -line_analyzer_dict: Dictionary<string, loghelper.ISingleLineAnalyzer>
-    +register_file_filter(file_filter: loghelper.IFileAnalyzer): void
-    +register_line_analyzer(file_type: string, line_analyzer: loghelper.ISingleLineAnalyzer): void
+    -line_analyzer_dict: Dictionary<string, azlog.ISingleLineAnalyzer>
+    +register_file_filter(file_filter: azlog.IFileAnalyzer): void
+    +register_line_analyzer(file_type: string, line_analyzer: azlog.ISingleLineAnalyzer): void
     +scan_files(root_dir_path: string): void
 }
 
-loghelper.LogAnalysisService --> loghelper.IFileAnalyzer
-loghelper.LogAnalysisService --> loghelper.ISingleLineAnalyzer
+azlog.LogAnalysisService --> azlog.IFileAnalyzer
+azlog.LogAnalysisService --> azlog.ISingleLineAnalyzer
 
 class PySide6.QMainWindow {}
 
-class loghelper.MainWindow {}
+class azlog.MainWindow {}
 
-PySide6.QMainWindow <|-- loghelper.MainWindow
+PySide6.QMainWindow <|-- azlog.MainWindow
 
 entity setting_json
 {
-    "tool_factory": "loghelper.DefaultToolFactory"
+    "tool_factory": "azlog.DefaultToolFactory"
 }
 
 class FactoryProvider
  {
-    +get_tool_factory(): loghelper.IToolFactory
+    +get_tool_factory(): azlog.IToolFactory
 }
 
 FactoryProvider --> setting_json
-FactoryProvider --> loghelper.DefaultToolFactory
+FactoryProvider --> azlog.DefaultToolFactory
 
 class Main {}
 
 Main --> FactoryProvider
-Main --> loghelper.IToolFactory
-Main --> loghelper.LogAnalysisService
-Main --> loghelper.MainWindow
-loghelper.MainWindow --> loghelper.LogAnalysisService
+Main --> azlog.IToolFactory
+Main --> azlog.LogAnalysisService
+Main --> azlog.MainWindow
+azlog.MainWindow --> azlog.LogAnalysisService
 
 @enduml
