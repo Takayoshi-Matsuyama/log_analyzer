@@ -92,6 +92,8 @@ azlog.FallbackMain --> azlog.DefaultToolFactory
 azlog.FallbackMain --> azlog.LogAnalysisService
 azlog.FallbackMain --> azlog.MainWindow
 
+note "FallbackMain is used when the azlog library is executed independently." as N1
+N1 .. azlog.FallbackMain
 
 class app.Main {}
 
@@ -100,5 +102,10 @@ app.Main --> azlog.IToolFactory
 app.Main --> azlog.LogAnalysisService
 app.Main --> azlog.MainWindow
 azlog.MainWindow --> azlog.LogAnalysisService
+
+note "azlog package is an open source." as N2
+N2 .. azlog
+note "app package provides custom implementations that may contain confidential information." as N3
+N3 .. app
 
 @enduml
