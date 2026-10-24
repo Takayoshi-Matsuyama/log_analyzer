@@ -22,8 +22,10 @@ interface azlog.IFileAnalyzer
 }
 
 class azlog.DefaultFileAnalyzer {}
+class app.CustomFileAnalyzer {}
 
 azlog.IFileAnalyzer <|-- azlog.DefaultFileAnalyzer
+azlog.IFileAnalyzer <|-- app.CustomFileAnalyzer
 
 interface azlog.ISingleLineAnalyzer
 {
@@ -31,9 +33,10 @@ interface azlog.ISingleLineAnalyzer
 }
 
 class azlog.DefaultLineAnalyzer {}
+class app.CustomLineAnalyzer {}
 
 azlog.ISingleLineAnalyzer <|-- azlog.DefaultLineAnalyzer
-
+azlog.ISingleLineAnalyzer <|-- app.CustomLineAnalyzer
 
 interface azlog.IToolFactory
 {
@@ -42,11 +45,16 @@ interface azlog.IToolFactory
 }
 
 class azlog.DefaultToolFactory {}
+class app.CustomToolFactory {}
 
 azlog.IToolFactory <|-- azlog.DefaultToolFactory
+azlog.IToolFactory <|-- app.CustomToolFactory
 
 azlog.DefaultToolFactory --> azlog.DefaultFileAnalyzer
 azlog.DefaultToolFactory --> azlog.DefaultLineAnalyzer
+
+app.CustomToolFactory --> app.CustomFileAnalyzer
+app.CustomToolFactory --> app.CustomLineAnalyzer
 
 class azlog.LogAnalysisService
 {
@@ -77,6 +85,13 @@ class app.FactoryProvider
 
 app.FactoryProvider --> app.setting_json
 app.FactoryProvider --> azlog.DefaultToolFactory
+app.FactoryProvider --> app.CustomToolFactory
+
+class azlog.FallbackMain {}
+azlog.FallbackMain --> azlog.DefaultToolFactory
+azlog.FallbackMain --> azlog.LogAnalysisService
+azlog.FallbackMain --> azlog.MainWindow
+
 
 class app.Main {}
 
