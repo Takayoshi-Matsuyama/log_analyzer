@@ -16,11 +16,9 @@
 
 title Log Analyzer
 
-
-
 interface IFileFilter
 {
-    +is_analysis_target(filename: string): (result :boolean, file_type: string)
+    +filter_file(file_path_name: string): (is_analysis_target: boolean, file_type: string)
 }
 
 class DefaultFileFilter {}
@@ -29,7 +27,7 @@ IFileFilter <|-- DefaultFileFilter
 
 interface ISingleLineAnalyzer
 {
-    +analyze_line(line: string): boolean
+    +filter_line(line: string): boolean
 }
 
 class DefaultLineAnalyzer {}
@@ -52,9 +50,10 @@ DefaultToolFactory --> DefaultLineAnalyzer
 
 class LogAnalysisService
 {
+    -analyzer_dictionary: Map<string, ISingleLineAnalyzer>
     +register_file_filter(file_filter: IFileFilter): void
     +register_line_analyzer(file_type: string, line_analyzer: ISingleLineAnalyzer): void
-    +analyze(root_file_path: String): void
+    +scan_files(root_dir_path: string): void
 }
 
 class QMainWindow {}
