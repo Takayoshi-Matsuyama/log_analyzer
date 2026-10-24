@@ -16,14 +16,14 @@
 
 title Log Analyzer
 
-interface IFileFilter
+interface IFileAnalyzer
 {
     +filter_file(file_path_name: string): (is_analysis_target: boolean, file_type: string)
 }
 
-class DefaultFileFilter {}
+class DefaultFileAnalyzer {}
 
-IFileFilter <|-- DefaultFileFilter
+IFileAnalyzer <|-- DefaultFileAnalyzer
 
 interface ISingleLineAnalyzer
 {
@@ -37,7 +37,7 @@ ISingleLineAnalyzer <|-- DefaultLineAnalyzer
 
 interface IToolFactory
 {
-    +create_file_filter(): IFileFilter
+    +create_file_filter(): IFileAnalyzer
     +create_line_analyzer(): ISingleLineAnalyzer
 }
 
@@ -45,13 +45,13 @@ class DefaultToolFactory {}
 
 IToolFactory <|-- DefaultToolFactory
 
-DefaultToolFactory --> DefaultFileFilter
+DefaultToolFactory --> DefaultFileAnalyzer
 DefaultToolFactory --> DefaultLineAnalyzer
 
 class LogAnalysisService
 {
     -analyzer_dictionary: Map<string, ISingleLineAnalyzer>
-    +register_file_filter(file_filter: IFileFilter): void
+    +register_file_filter(file_filter: IFileAnalyzer): void
     +register_line_analyzer(file_type: string, line_analyzer: ISingleLineAnalyzer): void
     +scan_files(root_dir_path: string): void
 }
@@ -71,7 +71,7 @@ class Main {}
 
 FactoryProvider --> DefaultToolFactory
 
-LogAnalysisService --> IFileFilter
+LogAnalysisService --> IFileAnalyzer
 LogAnalysisService --> ISingleLineAnalyzer
 Main --> FactoryProvider
 Main --> IToolFactory
