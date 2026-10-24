@@ -75,7 +75,7 @@ PySide6.QMainWindow <|-- azlog.MainWindow
 
 entity app.setting_json
 {
-    "tool_factory": "azlog.DefaultToolFactory"
+    "tool_factory": "app.CustomToolFactory"
 }
 
 class app.FactoryProvider
