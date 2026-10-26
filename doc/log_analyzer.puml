@@ -40,7 +40,7 @@ azlog.ISingleLineAnalyzer <|-- app.CustomLineAnalyzer
 
 interface azlog.IToolFactory
 {
-    +create_file_filter(): azlog.IFileAnalyzer
+    +create_file_analyzer(): azlog.IFileAnalyzer
     +create_line_analyzer(): azlog.ISingleLineAnalyzer
 }
 
@@ -56,14 +56,20 @@ azlog.DefaultToolFactory --> azlog.DefaultLineAnalyzer
 app.CustomToolFactory --> app.CustomFileAnalyzer
 app.CustomToolFactory --> app.CustomLineAnalyzer
 
-class azlog.LogAnalysisService
+interface azlog.ILogAnalysisService
 {
-    -line_analyzer_dict: Dictionary<string, azlog.ISingleLineAnalyzer>
-    +register_file_filter(file_filter: azlog.IFileAnalyzer): void
+    +register_file_analyzer(file_analyzer: azlog.IFileAnalyzer): void
     +register_line_analyzer(file_type: string, line_analyzer: azlog.ISingleLineAnalyzer): void
     +scan_files(root_dir_path: string): void
 }
 
+class azlog.LogAnalysisService
+{
+    -file_analyzer: azlog.IFileAnalyzer
+    -line_analyzer_dict: Dictionary<string, azlog.ISingleLineAnalyzer>
+}
+
+azlog.ILogAnalysisService <|-- azlog.LogAnalysisService
 azlog.LogAnalysisService --> azlog.IFileAnalyzer
 azlog.LogAnalysisService --> azlog.ISingleLineAnalyzer
 
@@ -72,6 +78,10 @@ class PySide6.QMainWindow {}
 class azlog.MainWindow {}
 
 PySide6.QMainWindow <|-- azlog.MainWindow
+
+class azlog.ServiceProvider <<singleton>>  {}
+
+azlog.ServiceProvider --> azlog.LogAnalysisService
 
 entity app.setting_json
 {
@@ -88,18 +98,20 @@ app.FactoryProvider --> azlog.DefaultToolFactory
 app.FactoryProvider --> app.CustomToolFactory
 
 class azlog.FallbackMain {}
+azlog.FallbackMain --> azlog.ServiceProvider
 azlog.FallbackMain --> azlog.DefaultToolFactory
-azlog.FallbackMain --> azlog.LogAnalysisService
+azlog.FallbackMain --> azlog.ILogAnalysisService
 azlog.FallbackMain --> azlog.MainWindow
 
-note "FallbackMain is used when the azlog library is executed independently." as N1
+note "FallbackMain is used when the azlog library is executed standalone." as N1
 N1 .. azlog.FallbackMain
 
 class app.Main {}
 
 app.Main --> app.FactoryProvider
+app.Main --> azlog.ServiceProvider
 app.Main --> azlog.IToolFactory
-app.Main --> azlog.LogAnalysisService
+app.Main --> azlog.ILogAnalysisService
 app.Main --> azlog.MainWindow
 azlog.MainWindow --> azlog.LogAnalysisService
 
