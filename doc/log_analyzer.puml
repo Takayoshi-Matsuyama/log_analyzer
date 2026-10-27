@@ -16,72 +16,73 @@
 
 title Log Analyzer
 
-interface azlog.IFileAnalyzer
+interface txtscn.IFileScanner
 {
-    +filter_file(file_path_name: string): (is_analysis_target: boolean, file_type: string)
+    +filter_file(file_path_name: string): (is_scanning_target: boolean, file_type: string)
 }
 
-class azlog.DefaultFileAnalyzer {}
-class app.CustomFileAnalyzer {}
+class txtscn.DefaultFileScanner {}
+class app.CustomFileScanner {}
 
-azlog.IFileAnalyzer <|-- azlog.DefaultFileAnalyzer
-azlog.IFileAnalyzer <|-- app.CustomFileAnalyzer
+txtscn.IFileScanner <|-- txtscn.DefaultFileScanner
+txtscn.IFileScanner <|-- app.CustomFileScanner
 
-interface azlog.ISingleLineAnalyzer
+interface txtscn.ISingleLineScanner
 {
-    +filter_line(line: string): boolean
+    +scan_line(line: string): void
 }
 
-class azlog.DefaultLineAnalyzer {}
-class app.CustomLineAnalyzer {}
+class txtscn.DefaultLineScanner {}
+class app.CustomLineScanner {}
 
-azlog.ISingleLineAnalyzer <|-- azlog.DefaultLineAnalyzer
-azlog.ISingleLineAnalyzer <|-- app.CustomLineAnalyzer
+txtscn.ISingleLineScanner <|-- txtscn.DefaultLineScanner
+txtscn.ISingleLineScanner <|-- app.CustomLineScanner
 
-interface azlog.IToolFactory
+interface txtscn.IToolFactory
 {
-    +create_file_analyzer(): azlog.IFileAnalyzer
-    +create_line_analyzer(): azlog.ISingleLineAnalyzer
+    +create_file_scanner(): txtscn.IFileScanner
+    +create_line_scanner(): txtscn.ISingleLineScanner
 }
 
-class azlog.DefaultToolFactory {}
+class txtscn.DefaultToolFactory {}
 class app.CustomToolFactory {}
 
-azlog.IToolFactory <|-- azlog.DefaultToolFactory
-azlog.IToolFactory <|-- app.CustomToolFactory
+txtscn.IToolFactory <|-- txtscn.DefaultToolFactory
+txtscn.IToolFactory <|-- app.CustomToolFactory
 
-azlog.DefaultToolFactory --> azlog.DefaultFileAnalyzer
-azlog.DefaultToolFactory --> azlog.DefaultLineAnalyzer
+txtscn.DefaultToolFactory --> txtscn.DefaultFileScanner
+txtscn.DefaultToolFactory --> txtscn.DefaultLineScanner
 
-app.CustomToolFactory --> app.CustomFileAnalyzer
-app.CustomToolFactory --> app.CustomLineAnalyzer
+app.CustomToolFactory --> app.CustomFileScanner
+app.CustomToolFactory --> app.CustomLineScanner
 
-interface azlog.ILogAnalysisService
+interface txtscn.ITxtScanningService
 {
-    +register_file_analyzer(file_analyzer: azlog.IFileAnalyzer): void
-    +register_line_analyzer(file_type: string, line_analyzer: azlog.ISingleLineAnalyzer): void
+    +register_file_scanner(file_scanner: txtscn.IFileScanner): void
+    +register_line_scanner(file_type: string, line_scanner: txtscn.ISingleLineScanner): void
     +scan_files(root_dir_path: string): void
 }
 
-class azlog.LogAnalysisService
+class txtscn.TxtScanningService
 {
-    -file_analyzer: azlog.IFileAnalyzer
-    -line_analyzer_dict: Dictionary<string, azlog.ISingleLineAnalyzer>
+    -file_scanner: txtscn.IFileScanner
+    -line_scanner_dict: Dictionary<string, txtscn.ISingleLineScanner>
 }
 
-azlog.ILogAnalysisService <|-- azlog.LogAnalysisService
-azlog.LogAnalysisService --> azlog.IFileAnalyzer
-azlog.LogAnalysisService --> azlog.ISingleLineAnalyzer
+txtscn.ITxtScanningService <|-- txtscn.TxtScanningService
+txtscn.TxtScanningService --> txtscn.IFileScanner
+txtscn.TxtScanningService --> txtscn.ISingleLineScanner
 
 class PySide6.QMainWindow {}
 
-class azlog.MainWindow {}
+class txtscn.MainWindow {}
 
-PySide6.QMainWindow <|-- azlog.MainWindow
+PySide6.QMainWindow <|-- txtscn.MainWindow
 
-class azlog.ServiceProvider <<singleton>>  {}
+class txtscn.ServiceProvider <<singleton>>  {}
 
-azlog.ServiceProvider --> azlog.LogAnalysisService
+txtscn.ServiceProvider --> txtscn.ITxtScanningService
+txtscn.ServiceProvider --> txtscn.TxtScanningService
 
 entity app.setting_json
 {
@@ -90,33 +91,33 @@ entity app.setting_json
 
 class app.FactoryProvider
  {
-    +get_tool_factory(): azlog.IToolFactory
+    +get_tool_factory(): txtscn.IToolFactory
 }
 
 app.FactoryProvider --> app.setting_json
-app.FactoryProvider --> azlog.DefaultToolFactory
+app.FactoryProvider --> txtscn.DefaultToolFactory
 app.FactoryProvider --> app.CustomToolFactory
 
-class azlog.FallbackMain {}
-azlog.FallbackMain --> azlog.ServiceProvider
-azlog.FallbackMain --> azlog.DefaultToolFactory
-azlog.FallbackMain --> azlog.ILogAnalysisService
-azlog.FallbackMain --> azlog.MainWindow
+class txtscn.FallbackMain {}
+txtscn.FallbackMain --> txtscn.ServiceProvider
+txtscn.FallbackMain --> txtscn.DefaultToolFactory
+txtscn.FallbackMain --> txtscn.ITxtScanningService
+txtscn.FallbackMain --> txtscn.MainWindow
 
-note "FallbackMain is used when the azlog library is executed standalone." as N1
-N1 .. azlog.FallbackMain
+note "FallbackMain is used when the txtscn library is executed standalone." as N1
+N1 .. txtscn.FallbackMain
 
 class app.Main {}
 
 app.Main --> app.FactoryProvider
-app.Main --> azlog.ServiceProvider
-app.Main --> azlog.IToolFactory
-app.Main --> azlog.ILogAnalysisService
-app.Main --> azlog.MainWindow
-azlog.MainWindow --> azlog.LogAnalysisService
+app.Main --> txtscn.ServiceProvider
+app.Main --> txtscn.IToolFactory
+app.Main --> txtscn.ITxtScanningService
+app.Main --> txtscn.MainWindow
+txtscn.MainWindow --> txtscn.ITxtScanningService
 
-note "azlog package is an open source." as N2
-N2 .. azlog
+note "txtscn package is an open source." as N2
+N2 .. txtscn
 note "app package provides custom implementations that may contain confidential information." as N3
 N3 .. app
 
