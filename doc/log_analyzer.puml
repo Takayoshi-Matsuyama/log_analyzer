@@ -79,7 +79,7 @@ class txtscn.MainWindow {}
 
 PySide6.QMainWindow <|-- txtscn.MainWindow
 
-class txtscn.ServiceProvider <<singleton>>  {}
+class txtscn.ServiceProvider {}
 
 txtscn.ServiceProvider --> txtscn.ITxtScanningService
 txtscn.ServiceProvider --> txtscn.TxtScanningService
@@ -98,19 +98,26 @@ app.FactoryProvider --> app.setting_json
 app.FactoryProvider --> txtscn.DefaultToolFactory
 app.FactoryProvider --> app.CustomToolFactory
 
-class txtscn.FallbackMain {}
-txtscn.FallbackMain --> txtscn.ServiceProvider
-txtscn.FallbackMain --> txtscn.DefaultToolFactory
+class txtscn.FallbackMain
+{
+    + start(): void
+}
+
+txtscn.FallbackMain *-- txtscn.ServiceProvider
+txtscn.FallbackMain *-- txtscn.DefaultToolFactory
 txtscn.FallbackMain --> txtscn.ITxtScanningService
 txtscn.FallbackMain --> txtscn.MainWindow
 
 note "FallbackMain is used when the txtscn library is executed standalone." as N1
 N1 .. txtscn.FallbackMain
 
-class app.Main {}
+class app.Main
+{
+    + start(): void
+}
 
-app.Main --> app.FactoryProvider
-app.Main --> txtscn.ServiceProvider
+app.Main *-- app.FactoryProvider
+app.Main *-- txtscn.ServiceProvider
 app.Main --> txtscn.IToolFactory
 app.Main --> txtscn.ITxtScanningService
 app.Main --> txtscn.MainWindow
