@@ -75,7 +75,10 @@ txtscn.TxtScanningService --> txtscn.ISingleLineScanner
 
 class PySide6.QMainWindow {}
 
-class txtscn.MainWindow {}
+class txtscn.MainWindow
+{
+    + __init__(scanning_service: txtscn.ITxtScanningService): void
+}
 
 PySide6.QMainWindow <|-- txtscn.MainWindow
 
