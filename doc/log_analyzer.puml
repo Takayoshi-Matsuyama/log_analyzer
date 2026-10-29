@@ -29,8 +29,12 @@ txtscn.IFileScanner <|-- app.CustomFileScanner
 
 interface txtscn.ISingleLineScanner
 {
-    +scan_line(line: string): void
+    +scan_line(line: string): string
 }
+
+note left of txtscn.ISingleLineScanner::scan_line
+    scan_line returns the report as a string
+end note
 
 class txtscn.DefaultLineScanner {}
 class app.CustomLineScanner {}
