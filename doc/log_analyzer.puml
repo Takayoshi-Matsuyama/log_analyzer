@@ -65,7 +65,13 @@ interface txtscn.ITxtScanningService
     +register_file_scanner(file_scanner: txtscn.IFileScanner): void
     +register_line_scanner(file_type: string, line_scanner: txtscn.ISingleLineScanner): void
     +scan_files(root_dir_path: string): void
+    -notify_scan_result_to_ui(msg: string): void
 }
+
+note left of txtscn.ITxtScanningService::notify_scan_result_to_ui
+    sends scan results to the UI using PySide's signal and slot mechanism.
+end note
+
 
 class txtscn.TxtScanningService
 {
@@ -85,6 +91,7 @@ class txtscn.MainWindow
 }
 
 PySide6.QMainWindow <|-- txtscn.MainWindow
+txtscn.ITxtScanningService --> txtscn.MainWindow
 
 class txtscn.ServiceProvider {}
 
