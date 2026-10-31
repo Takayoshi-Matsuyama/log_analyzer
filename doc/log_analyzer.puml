@@ -21,11 +21,21 @@ interface txtscn.IFileScanner
     +filter_file(file_path_name: string): (is_scanning_target: boolean, file_type: string)
 }
 
-class txtscn.DefaultFileScanner {}
-class app.CustomFileScanner {}
+class txtscn.DefaultFileScanner
+{
+    -read_header_content(file_path_name: string, num_lines: int): string
+}
+class app.CustomFileScanner
+{
+    -read_header_content(file_path_name: string, num_lines: int): string
+}
 
 txtscn.IFileScanner <|-- txtscn.DefaultFileScanner
 txtscn.IFileScanner <|-- app.CustomFileScanner
+
+note left of txtscn.DefaultFileScanner::read_header_content
+    optionally reads the header content of the file.
+end note
 
 interface txtscn.ISingleLineScanner
 {
