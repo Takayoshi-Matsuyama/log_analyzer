@@ -93,11 +93,6 @@ class txtscn.MainWindow
 PySide6.QMainWindow <|-- txtscn.MainWindow
 txtscn.ITxtScanningService --> txtscn.MainWindow
 
-class txtscn.ServiceProvider {}
-
-txtscn.ServiceProvider --> txtscn.ITxtScanningService
-txtscn.ServiceProvider --> txtscn.TxtScanningService
-
 entity app.setting_json
 {
     "tool_factory": "app.CustomToolFactory"
@@ -117,12 +112,11 @@ class txtscn.FallbackMain
     + start(): void
 }
 
-txtscn.FallbackMain *-- txtscn.ServiceProvider
 txtscn.FallbackMain *-- txtscn.DefaultToolFactory
-txtscn.FallbackMain --> txtscn.ITxtScanningService
+txtscn.FallbackMain --> txtscn.TxtScanningService
 txtscn.FallbackMain --> txtscn.MainWindow
 
-note "FallbackMain is used when the txtscn library is executed standalone." as N1
+note "FallbackMain is used when the txtscn package is executed standalone." as N1
 N1 .. txtscn.FallbackMain
 
 class app.Main
@@ -131,9 +125,8 @@ class app.Main
 }
 
 app.Main *-- app.FactoryProvider
-app.Main *-- txtscn.ServiceProvider
 app.Main --> txtscn.IToolFactory
-app.Main --> txtscn.ITxtScanningService
+app.Main --> txtscn.TxtScanningService
 app.Main --> txtscn.MainWindow
 txtscn.MainWindow --> txtscn.ITxtScanningService
 
