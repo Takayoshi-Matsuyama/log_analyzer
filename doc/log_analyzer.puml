@@ -37,25 +37,25 @@ note left of txtscn.DefaultFileScanner::read_header_content
     optionally reads the header content of the file.
 end note
 
-interface txtscn.ISingleLineScanner
+interface txtscn.ILineScanner
 {
     +scan_line(line: string): string
 }
 
-note left of txtscn.ISingleLineScanner::scan_line
+note left of txtscn.ILineScanner::scan_line
     scan_line returns the report as a string
 end note
 
 class txtscn.DefaultLineScanner {}
 class app.CustomLineScanner {}
 
-txtscn.ISingleLineScanner <|-- txtscn.DefaultLineScanner
-txtscn.ISingleLineScanner <|-- app.CustomLineScanner
+txtscn.ILineScanner <|-- txtscn.DefaultLineScanner
+txtscn.ILineScanner <|-- app.CustomLineScanner
 
 interface txtscn.IToolFactory
 {
     +create_file_scanner(): txtscn.IFileScanner
-    +create_line_scanner(): txtscn.ISingleLineScanner
+    +create_line_scanner(): txtscn.ILineScanner
 }
 
 class txtscn.DefaultToolFactory {}
@@ -73,7 +73,7 @@ app.CustomToolFactory --> app.CustomLineScanner
 interface txtscn.ITextScanningService
 {
     +register_file_scanner(file_scanner: txtscn.IFileScanner): void
-    +register_line_scanner(file_type: string, line_scanner: txtscn.ISingleLineScanner): void
+    +register_line_scanner(file_type: string, line_scanner: txtscn.ILineScanner): void
     +scan_files(root_dir_path: string): void
     -notify_scan_result_to_ui(msg: string): void
 }
@@ -86,12 +86,12 @@ end note
 class txtscn.TextScanningService
 {
     -file_scanner: txtscn.IFileScanner
-    -line_scanner_dict: Dictionary<string, txtscn.ISingleLineScanner>
+    -line_scanner_dict: Dictionary<string, txtscn.ILineScanner>
 }
 
 txtscn.ITextScanningService <|-- txtscn.TextScanningService
 txtscn.TextScanningService --> txtscn.IFileScanner
-txtscn.TextScanningService --> txtscn.ISingleLineScanner
+txtscn.TextScanningService --> txtscn.ILineScanner
 
 class PySide6.QMainWindow {}
 
