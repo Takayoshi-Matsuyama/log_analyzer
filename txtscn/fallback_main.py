@@ -11,3 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+
+def fallback_main():
+    """fallback main is used when the primary main is not available."""
+    print("Hello, World!")
+
+
+if __name__ == "__main__":
+    fallback_main()
