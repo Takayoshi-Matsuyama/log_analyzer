@@ -72,9 +72,9 @@ app.CustomToolFactory --> app.CustomLineScanner
 
 interface txtscn.ITextScanningService
 {
-    +register_file_scanner(file_scanner: txtscn.IFileScanner): void
-    +register_line_scanner(file_type: string, line_scanner: txtscn.ILineScanner): void
-    +scan_files(root_dir_path: string): void
+    +register_file_scanner(scanner: txtscn.IFileScanner): void
+    +register_line_scanner(file_type: string, scanner: txtscn.ILineScanner): void
+    +scan_files(root_path: string): void
     -notify_scan_result_to_ui(msg: string): void
 }
 
