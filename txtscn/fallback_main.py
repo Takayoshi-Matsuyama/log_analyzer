@@ -16,7 +16,7 @@ import sys
 
 from PySide6.QtWidgets import QApplication
 
-import main_window
+from main_window import MainWindow
 
 
 def fallback_main():
@@ -24,7 +24,7 @@ def fallback_main():
     print("Hello, World!")
 
     app = QApplication(sys.argv)
-    window = main_window.MainWindow(scanning_service=None)
+    window = MainWindow(scanning_service=None)
     window.show()
 
     sys.exit(app.exec())

@@ -16,21 +16,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 
 
-class IFileScanner(ABC):
-    """Provides an interface for file scanning."""
-
-    @abstractmethod
-    def filter_file(self, file_path_name: str) -> tuple[bool, str]:
-        """Filters the given file and returns a tuple (is_scanning_target, file_type).
-
-        Args:
-            file_path_name (str): The path and name of the file to be filtered.
-        Returns:
-            tuple[bool, str]: scanning target indicator and the file type.
-        """
-        ...  # Should be implemented by concrete subclasses.
-
-
 class ILineScanner(ABC):
     """Provides an interface for line scanning."""
 
@@ -42,6 +27,21 @@ class ILineScanner(ABC):
             line (str): The line to be scanned.
         Returns:
             str: The report string.
+        """
+        ...  # Should be implemented by concrete subclasses.
+
+
+class IFileScanner(ABC):
+    """Provides an interface for file scanning."""
+
+    @abstractmethod
+    def filter_file(self, file_path_name: str) -> tuple[bool, str]:
+        """Filters the given file and returns a tuple (is_scanning_target, file_type).
+
+        Args:
+            file_path_name (str): The path and name of the file to be filtered.
+        Returns:
+            tuple[bool, str]: scanning target indicator and the file type.
         """
         ...  # Should be implemented by concrete subclasses.
 
