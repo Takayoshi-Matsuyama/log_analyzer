@@ -11,3 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+from PySide6.QtWidgets import QMainWindow
+
+
+class MainWindow(QMainWindow):
+    def __init__(self, scanning_service):
+        super().__init__()
+        self.scanning_service = scanning_service
+        self.setWindowTitle("Log Analyzer")
+        self.resize(800, 600)

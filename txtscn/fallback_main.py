@@ -12,10 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
+
+from PySide6.QtWidgets import QApplication
+
+import main_window
+
 
 def fallback_main():
     """fallback main is used when the primary main is not available."""
     print("Hello, World!")
+
+    app = QApplication(sys.argv)
+    window = main_window.MainWindow(scanning_service=None)
+    window.show()
+
+    sys.exit(app.exec())
 
 
 if __name__ == "__main__":
