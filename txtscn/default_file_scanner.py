@@ -16,6 +16,16 @@ from interfaces import IFileScanner
 
 
 class DefaultFileScanner(IFileScanner):
+    """Represents the default file scanner implementation."""
+
     def filter_file(self, file_path_name: str) -> tuple[bool, str]:
+        """Filters a file.
+
+        Args:
+            file_path_name (str): The path and name of the file to be filtered.
+        Returns:
+            tuple[bool, str]: scanning target indicator and the file type.
+        """
+
         # Implement the default file filtering logic here
         return True, "default"

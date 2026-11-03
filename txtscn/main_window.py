@@ -16,7 +16,14 @@ from PySide6.QtWidgets import QMainWindow
 
 
 class MainWindow(QMainWindow):
+    """Represents the main window of the application."""
+
     def __init__(self, scanning_service):
+        """Initializes the main window.
+
+        Args:
+            scanning_service: The scanning service to be used by the main window.
+        """
         super().__init__()
         self.scanning_service = scanning_service
         self.setWindowTitle("Log Analyzer")
