@@ -11,3 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+from interfaces import ILineScanner
+
+
+class DefaultLineScanner(ILineScanner):
+    def scan_line(self, line: str) -> str:
+        # Implement the default line scanning logic here
+        return f"Scanned line: {line}"
