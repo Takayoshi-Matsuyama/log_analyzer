@@ -12,7 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from PySide6.QtWidgets import QFileDialog, QMainWindow, QPushButton, QStatusBar
+from PySide6.QtWidgets import (
+    QFileDialog,
+    QMainWindow,
+    QPushButton,
+    QStatusBar,
+    QVBoxLayout,
+    QWidget,
+)
 
 from interfaces import ITextScanningService
 
@@ -39,7 +46,14 @@ class MainWindow(QMainWindow):
         # --- Button ---
         button = QPushButton("Click Me")
         button.clicked.connect(self.on_button_clicked)
-        self.setCentralWidget(button)
+
+        # --- Layout ---
+        layout = QVBoxLayout()
+        layout.addWidget(button)
+
+        widget = QWidget()
+        widget.setLayout(layout)
+        self.setCentralWidget(widget)
 
     def on_button_clicked(self):
         """Handles the button click event."""
