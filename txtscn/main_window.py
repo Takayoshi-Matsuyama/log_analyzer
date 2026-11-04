@@ -14,6 +14,7 @@
 
 from PySide6.QtWidgets import (
     QFileDialog,
+    QHBoxLayout,
     QMainWindow,
     QPushButton,
     QStatusBar,
@@ -43,22 +44,36 @@ class MainWindow(QMainWindow):
         status_bar.showMessage("Ready")
         self.setStatusBar(status_bar)
 
-        # --- Button ---
-        button = QPushButton("Click Me")
-        button.clicked.connect(self.on_button_clicked)
+        # --- Button (Select Directory) ---
+        select_directory_button = QPushButton("Select Directory")
+        select_directory_button.clicked.connect(self.on_select_directory_button_clicked)
+
+        # --- Button (Start Scan) ---
+        start_scan_button = QPushButton("Start Scan")
+        start_scan_button.clicked.connect(self.on_start_scan_button_clicked)
 
         # --- Layout ---
-        layout = QVBoxLayout()
-        layout.addWidget(button)
+        hbox_layout = QHBoxLayout()
+        hbox_widget = QWidget()
+        hbox_widget.setLayout(hbox_layout)
+        hbox_layout.addWidget(select_directory_button)
 
-        widget = QWidget()
-        widget.setLayout(layout)
-        self.setCentralWidget(widget)
+        vbox_layout = QVBoxLayout()
+        vbox_widget = QWidget()
+        vbox_widget.setLayout(vbox_layout)
+        vbox_layout.addWidget(hbox_widget)
+        vbox_layout.addWidget(start_scan_button)
 
-    def on_button_clicked(self):
-        """Handles the button click event."""
-        print("Button clicked!")
+        self.setCentralWidget(vbox_widget)
+
+    def on_select_directory_button_clicked(self):
+        """Handles the select directory button click event."""
+        print("Select Directory button clicked!")
 
         # --- Select the root directory to scan.---
         directory_name = QFileDialog.getExistingDirectory(self, "Select Directory", "")
         print(f"Selected folder: {directory_name}")
+
+    def on_start_scan_button_clicked(self):
+        """Handles the start scan button click event."""
+        print("Start Scan button clicked!")
