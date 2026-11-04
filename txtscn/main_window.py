@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from PySide6.QtWidgets import QMainWindow, QPushButton, QStatusBar
+from PySide6.QtWidgets import QFileDialog, QMainWindow, QPushButton, QStatusBar
 
 from interfaces import ITextScanningService
 
@@ -44,3 +44,7 @@ class MainWindow(QMainWindow):
     def on_button_clicked(self):
         """Handles the button click event."""
         print("Button clicked!")
+
+        # --- Select the root directory to scan.---
+        directory_name = QFileDialog.getExistingDirectory(self, "Select Directory", "")
+        print(f"Selected folder: {directory_name}")
