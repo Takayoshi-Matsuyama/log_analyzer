@@ -15,6 +15,7 @@
 from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
+    QLineEdit,
     QMainWindow,
     QPushButton,
     QStatusBar,
@@ -44,6 +45,13 @@ class MainWindow(QMainWindow):
         status_bar.showMessage("Ready")
         self.setStatusBar(status_bar)
 
+        # --- Line Edit (Directory Path) ---
+        self.directory_path_line_edit = QLineEdit(self)
+        self.directory_path_line_edit.setPlaceholderText(
+            "Select a root directory to scan"
+        )
+        self.directory_path_line_edit.setReadOnly(True)
+
         # --- Button (Select Directory) ---
         select_directory_button = QPushButton("Select Directory")
         select_directory_button.clicked.connect(self.on_select_directory_button_clicked)
@@ -56,6 +64,7 @@ class MainWindow(QMainWindow):
         hbox_layout = QHBoxLayout()
         hbox_widget = QWidget()
         hbox_widget.setLayout(hbox_layout)
+        hbox_layout.addWidget(self.directory_path_line_edit)
         hbox_layout.addWidget(select_directory_button)
 
         vbox_layout = QVBoxLayout()
@@ -73,7 +82,14 @@ class MainWindow(QMainWindow):
         # --- Select the root directory to scan.---
         directory_name = QFileDialog.getExistingDirectory(self, "Select Directory", "")
         print(f"Selected folder: {directory_name}")
+        if directory_name:
+            self.directory_path_line_edit.setText(directory_name)
 
     def on_start_scan_button_clicked(self):
         """Handles the start scan button click event."""
         print("Start Scan button clicked!")
+        directory_path = self.directory_path_line_edit.text()
+        if not directory_path:
+            print("No directory selected!")
+            return
+        self.scanning_service.scan_files(directory_path)
