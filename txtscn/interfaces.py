@@ -46,6 +46,20 @@ class IFileScanner(ABC):
         ...  # Should be implemented by concrete subclasses.
 
 
+class IToolFactory(ABC):
+    """Provides an interface for the tool factory."""
+
+    @abstractmethod
+    def create_line_scanner(self) -> ILineScanner:
+        """Creates and returns a line scanner."""
+        ...  # Should be implemented by concrete subclasses.
+
+    @abstractmethod
+    def create_file_scanner(self) -> IFileScanner:
+        """Creates and returns a file scanner."""
+        ...  # Should be implemented by concrete subclasses.
+
+
 class ITextScanningService(ABC):
     """Provides an interface for the text scanning service."""
 

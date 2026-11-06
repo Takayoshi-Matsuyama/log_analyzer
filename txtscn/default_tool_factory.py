@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from interfaces import IFileScanner, ILineScanner
+from interfaces import IFileScanner, ILineScanner, IToolFactory
 from default_file_scanner import DefaultFileScanner
 from default_line_scanner import DefaultLineScanner
 
 
-class DefaultToolFactory:
+class DefaultToolFactory(IToolFactory):
     """Factory class for creating default tools."""
 
     @staticmethod

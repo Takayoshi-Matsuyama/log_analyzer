@@ -17,14 +17,25 @@ import sys
 from PySide6.QtWidgets import QApplication
 
 from main_window import MainWindow
+from interfaces import ILineScanner, IFileScanner, ITextScanningService
+from text_scanning_service import TextScanningService
+from default_tool_factory import DefaultToolFactory
 
 
 def fallback_main():
     """fallback main is used when the primary main is not available."""
     print("Hello, World!")
 
+    tool_factory = DefaultToolFactory()
+    line_scanner: ILineScanner = tool_factory.create_line_scanner()
+    file_scanner: IFileScanner = tool_factory.create_file_scanner()
+
+    text_scanning_service: ITextScanningService = TextScanningService()
+    text_scanning_service.register_file_scanner(file_scanner)
+    text_scanning_service.register_line_scanner("default", line_scanner)
+
     app = QApplication(sys.argv)
-    window = MainWindow(scanning_service=None)
+    window = MainWindow(scanning_service=text_scanning_service)
     window.show()
 
     sys.exit(app.exec())
