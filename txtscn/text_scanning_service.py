@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+from pathlib import Path
+
 from interfaces import ITextScanningService, IFileScanner, ILineScanner
 
 
@@ -52,4 +55,22 @@ class TextScanningService(ITextScanningService):
         Returns:
             None
         """
-        ...  # Should be implemented by concrete subclasses.
+        # Check if a file scanner is registered
+        if self._file_scanner is None:
+            raise ValueError("No file scanner registered.")
+
+        # Check if the directory exists
+        if not Path(root_path).exists():
+            raise ValueError(f"Directory does not exist: {root_path}")
+        if not Path(root_path).is_dir():
+            raise ValueError(f"Path is not a directory: {root_path}")
+        if not os.access(root_path, os.R_OK):
+            raise ValueError(f"Directory is not readable: {root_path}")
+
+        # Enumerate and scan files using the registered file scanner
+        # TODO: Distinguish directory and file.
+        # TODO: Consider using Path.glob() with Pathlib.
+        for dirpath, _, filenames in os.walk(root_path):
+            for filename in filenames:
+                file_path = os.path.join(dirpath, filename)
+                self._file_scanner.filter_file(file_path)
