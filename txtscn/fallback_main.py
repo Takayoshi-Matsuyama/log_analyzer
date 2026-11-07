@@ -51,5 +51,6 @@ def fallback_main():
     sys.exit(app.exec())
 
 
+# Entry point for the fallback main function
 if __name__ == "__main__":
     fallback_main()
