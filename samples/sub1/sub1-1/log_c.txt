@@ -1,0 +1,15 @@
+DEBUG: debug c_1
+DEBUG: debug c_2
+DEBUG: debug c_3
+INFO: information c_1
+INFO: information c_2
+INFO: information c_3
+WARNING: warning c_1
+WARNING: warning c_2
+WARNING: warning c_3
+ERROR: error c_1
+ERROR: error c_2
+ERROR: error c_3
+CRITICAL: critical c_1
+CRITICAL: critical c_2
+CRITICAL: critical c_3

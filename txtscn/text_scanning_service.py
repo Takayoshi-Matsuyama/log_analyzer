@@ -68,9 +68,9 @@ class TextScanningService(ITextScanningService):
             raise ValueError(f"Directory is not readable: {root_path}")
 
         # Enumerate and scan files using the registered file scanner
-        # TODO: Distinguish directory and file.
-        # TODO: Consider using Path.glob() with Pathlib.
+        # os.walk() is used to recursively enumerate files under the root path.
         for dirpath, _, filenames in os.walk(root_path):
             for filename in filenames:
                 file_path = os.path.join(dirpath, filename)
+                print(f"Scanning file: {file_path}")
                 self._file_scanner.filter_file(file_path)
