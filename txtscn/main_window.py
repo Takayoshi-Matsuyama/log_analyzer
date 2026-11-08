@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from PySide6.QtCore import QRunnable, QThreadPool
 from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
@@ -19,11 +20,23 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QPushButton,
     QStatusBar,
+    QTextEdit,
     QVBoxLayout,
     QWidget,
 )
 
+
 from interfaces import ITextScanningService
+
+
+class Worker(QRunnable):
+    """Worker class for executing concurrent tasks."""
+
+    def run(self):
+        """Runs the concurrent task."""
+        print("Starting concurrent task....")
+
+        print("Concurrent task finished.")
 
 
 class MainWindow(QMainWindow):
@@ -37,6 +50,7 @@ class MainWindow(QMainWindow):
         """
         super().__init__()
         self.scanning_service = scanning_service
+        self.thread_pool = QThreadPool()
         self.setWindowTitle("Log Analyzer")
         self.resize(800, 600)
 
@@ -60,6 +74,10 @@ class MainWindow(QMainWindow):
         start_scan_button = QPushButton("Start Scan")
         start_scan_button.clicked.connect(self.on_start_scan_button_clicked)
 
+        # --- Text Edit (Log Output) ---
+        self.log_output_text_edit = QTextEdit(self)
+        self.log_output_text_edit.setReadOnly(True)
+
         # --- Layout ---
         hbox_layout = QHBoxLayout()
         hbox_widget = QWidget()
@@ -72,6 +90,7 @@ class MainWindow(QMainWindow):
         vbox_widget.setLayout(vbox_layout)
         vbox_layout.addWidget(hbox_widget)
         vbox_layout.addWidget(start_scan_button)
+        vbox_layout.addWidget(self.log_output_text_edit)
 
         self.setCentralWidget(vbox_widget)
 
@@ -88,6 +107,10 @@ class MainWindow(QMainWindow):
     def on_start_scan_button_clicked(self):
         """Handles the start scan button click event."""
         print("Start Scan button clicked!")
+        worker = Worker()
+        self.thread_pool.start(worker)
+
+        # TODO: Move this to the concurrent worker
         directory_path = self.directory_path_line_edit.text()
         if not directory_path:
             print("No directory selected!")
