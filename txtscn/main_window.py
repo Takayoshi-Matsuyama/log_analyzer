@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from PySide6.QtCore import QRunnable, QThreadPool
+from PySide6.QtCore import QRunnable, QThreadPool, QObject, Signal, Slot
 from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
@@ -29,14 +29,38 @@ from PySide6.QtWidgets import (
 from interfaces import ITextScanningService
 
 
+class WorkerSignals(QObject):
+    """Represents the signals available for a worker thread."""
+
+    message = Signal(str)  # Signal to indicate a message from the worker
+    progress = Signal(int)  # Signal to indicate progress percentage
+    finished = Signal()  # Signal to indicate the worker has finished
+
+
 class Worker(QRunnable):
     """Worker class for executing concurrent tasks."""
 
+    def __init__(self, scanning_service: ITextScanningService, directory_path: str):
+        super().__init__()
+        self.scanning_service = scanning_service
+        self.directory_path = directory_path
+        self.signals = WorkerSignals()
+
+    @Slot()
     def run(self):
         """Runs the concurrent task."""
         print("Starting concurrent task....")
+        self.signals.message.emit("Starting concurrent task....")
+
+        if not self.directory_path:
+            print("No directory selected!")
+            self.signals.message.emit("No directory selected!")
+            return
+        self.scanning_service.scan_files(self.directory_path)
 
         print("Concurrent task finished.")
+        self.signals.message.emit("Concurrent task finished.")
+        self.signals.finished.emit()
 
 
 class MainWindow(QMainWindow):
@@ -107,12 +131,14 @@ class MainWindow(QMainWindow):
     def on_start_scan_button_clicked(self):
         """Handles the start scan button click event."""
         print("Start Scan button clicked!")
-        worker = Worker()
-        self.thread_pool.start(worker)
-
-        # TODO: Move this to the concurrent worker
         directory_path = self.directory_path_line_edit.text()
         if not directory_path:
             print("No directory selected!")
             return
-        self.scanning_service.scan_files(directory_path)
+
+        worker = Worker(self.scanning_service, directory_path)
+        worker.signals.message.connect(self.log_output_text_edit.append)
+        worker.signals.finished.connect(
+            lambda: self.log_output_text_edit.append("Scan finished.")
+        )
+        self.thread_pool.start(worker)
