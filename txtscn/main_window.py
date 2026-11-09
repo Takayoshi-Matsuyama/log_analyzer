@@ -32,9 +32,9 @@ from interfaces import ITextScanningService
 class WorkerSignals(QObject):
     """Represents the signals available for a worker thread."""
 
-    message = Signal(str)  # Signal to indicate a message from the worker
-    progress = Signal(int)  # Signal to indicate progress percentage
-    finished = Signal()  # Signal to indicate the worker has finished
+    message_signal = Signal(str)  # Signal to indicate a message from the worker
+    progress_signal = Signal(int)  # Signal to indicate progress percentage
+    finished_signal = Signal()  # Signal to indicate the worker has finished
 
 
 class Worker(QRunnable):
@@ -50,17 +50,21 @@ class Worker(QRunnable):
     def run(self):
         """Runs the concurrent task."""
         print("Starting concurrent task....")
-        self.signals.message.emit("Starting concurrent task....")
+        self.signals.message_signal.emit("Starting concurrent task....")
 
         if not self.directory_path:
             print("No directory selected!")
-            self.signals.message.emit("No directory selected!")
+            self.signals.message_signal.emit("No directory selected!")
             return
-        self.scanning_service.scan_files(self.directory_path)
+
+        # TODO: Emit progress updates from the scanning service if available
+        self.scanning_service.scan_files(
+            self.directory_path, self.signals.message_signal
+        )
 
         print("Concurrent task finished.")
-        self.signals.message.emit("Concurrent task finished.")
-        self.signals.finished.emit()
+        self.signals.message_signal.emit("Concurrent task finished.")
+        self.signals.finished_signal.emit()
 
 
 class MainWindow(QMainWindow):
@@ -137,8 +141,8 @@ class MainWindow(QMainWindow):
             return
 
         worker = Worker(self.scanning_service, directory_path)
-        worker.signals.message.connect(self.log_output_text_edit.append)
-        worker.signals.finished.connect(
+        worker.signals.message_signal.connect(self.log_output_text_edit.append)
+        worker.signals.finished_signal.connect(
             lambda: self.log_output_text_edit.append("Scan finished.")
         )
         self.thread_pool.start(worker)

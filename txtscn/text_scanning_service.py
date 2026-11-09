@@ -15,6 +15,8 @@
 import os
 from pathlib import Path
 
+from PySide6.QtCore import Signal
+
 from interfaces import ITextScanningService, IFileScanner, ILineScanner
 
 
@@ -47,11 +49,12 @@ class TextScanningService(ITextScanningService):
         """
         self._line_scanners[file_type] = scanner
 
-    def scan_files(self, root_path: str) -> None:
+    def scan_files(self, root_path: str, message_signal: Signal(str)) -> None:
         """Scans all files under the given root path recursively.
 
         Args:
             root_path (str): The root path under which files are to be scanned.
+            message_signal (Signal(str)): The signal to emit messages during scanning.
         Returns:
             None
         """
@@ -73,4 +76,5 @@ class TextScanningService(ITextScanningService):
             for filename in filenames:
                 file_path = os.path.join(dirpath, filename)
                 print(f"Scanning file: {file_path}")
+                message_signal.emit(f"Scanning file: {file_path}")
                 self._file_scanner.filter_file(file_path)
