@@ -18,13 +18,14 @@ from interfaces import ILineScanner
 class DefaultLineScanner(ILineScanner):
     """Represents the default line scanner implementation."""
 
-    def scan_line(self, line: str) -> str:
+    def scan_line(self, line: str, mode: str) -> str:
         """Scans a single line of text.
 
         Args:
             line (str): The line of text to be scanned.
+            mode (str): The scanning mode to be used.
         Returns:
             str: The report text.
         """
         # Implement the default line scanning logic here
-        return f"Scanned line: {line}"
+        return f"Scanned line: {line} with mode: {mode}"

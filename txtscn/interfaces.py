@@ -20,11 +20,12 @@ class ILineScanner(ABC):
     """Provides an interface for line scanning."""
 
     @abstractmethod
-    def scan_line(self, line: str) -> str:
+    def scan_line(self, line: str, mode: str) -> str:
         """Scans the given line and returns the report as a string.
 
         Args:
             line (str): The line to be scanned.
+            mode (str): The scanning mode to be used.
         Returns:
             str: The report string.
         """
@@ -35,11 +36,12 @@ class IFileScanner(ABC):
     """Provides an interface for file scanning."""
 
     @abstractmethod
-    def filter_file(self, file_path_name: str) -> tuple[bool, str]:
+    def filter_file(self, file_path_name: str, mode: str) -> tuple[bool, str]:
         """Filters the given file and returns a tuple (is_scanning_target, file_type).
 
         Args:
             file_path_name (str): The path and name of the file to be filtered.
+            mode (str): The scanning mode to be used.
         Returns:
             tuple[bool, str]: scanning target indicator and the file type.
         """
@@ -57,6 +59,15 @@ class IToolFactory(ABC):
     @abstractmethod
     def create_file_scanner(self) -> IFileScanner:
         """Creates and returns a file scanner."""
+        ...  # Should be implemented by concrete subclasses.
+
+
+class IModeProvider(ABC):
+    """Provides an interface for mode providers."""
+
+    @abstractmethod
+    def get_mode_list(self) -> list[str]:
+        """Returns the list of available modes."""
         ...  # Should be implemented by concrete subclasses.
 
 
@@ -87,11 +98,12 @@ class ITextScanningService(ABC):
         ...  # Should be implemented by concrete subclasses.
 
     @abstractmethod
-    def scan_files(self, root_path: str) -> None:
-        """Scans all files under the given root path recursively.
+    def scan_files(self, root_path: str, mode: str) -> None:
+        """Scans all files under the given root path recursively using the specified mode.
 
         Args:
             root_path (str): The root path under which files are to be scanned.
+            mode (str): The scanning mode to be used.
         Returns:
             None
         """

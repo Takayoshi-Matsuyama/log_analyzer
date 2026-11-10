@@ -50,14 +50,19 @@ class TextScanningService(ITextScanningService):
         self._line_scanners[file_type] = scanner
 
     def scan_files(
-        self, root_path: str, message_signal: Signal(str), progress_signal: Signal(int)
+        self,
+        root_path: str,
+        mode: str,
+        message_signal: Signal(str),
+        progress_signal: Signal(int),
     ) -> None:
         """Scans all files under the given root path recursively.
 
         Args:
             root_path (str): The root path under which files are to be scanned.
-            message_signal (Signal(str)): The signal to emit messages during scanning.
-            progress_signal (Signal(int)): The signal to emit progress updates during scanning.
+            mode (str): The scanning mode to be used.
+            message_signal (Signal[str]): The signal to emit messages during scanning.
+            progress_signal (Signal[int]): The signal to emit progress updates during scanning.
         Returns:
             None
         """
@@ -84,7 +89,7 @@ class TextScanningService(ITextScanningService):
                 file_path = os.path.join(dirpath, filename)
                 print(f"Scanning file: {file_path}")
                 message_signal.emit(f"Scanning file: {file_path}")
-                self._file_scanner.filter_file(file_path)
+                self._file_scanner.filter_file(file_path, mode)
                 scanned_file_num += 1
                 print(f"Progress: {scanned_file_num}/{total_file_num}")
                 message_signal.emit(f"Progress: {scanned_file_num}/{total_file_num}")
