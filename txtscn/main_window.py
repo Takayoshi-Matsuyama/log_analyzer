@@ -17,6 +17,7 @@ from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
     QLineEdit,
+    QProgressBar,
     QMainWindow,
     QPushButton,
     QStatusBar,
@@ -59,7 +60,9 @@ class Worker(QRunnable):
 
         # TODO: Emit progress updates from the scanning service if available
         self.scanning_service.scan_files(
-            self.directory_path, self.signals.message_signal
+            self.directory_path,
+            self.signals.message_signal,
+            self.signals.progress_signal,
         )
 
         print("Concurrent task finished.")
@@ -106,6 +109,9 @@ class MainWindow(QMainWindow):
         self.log_output_text_edit = QTextEdit(self)
         self.log_output_text_edit.setReadOnly(True)
 
+        # --- Progress Bar ---
+        self.progress_bar = QProgressBar(self)
+
         # --- Layout ---
         hbox_layout = QHBoxLayout()
         hbox_widget = QWidget()
@@ -119,6 +125,7 @@ class MainWindow(QMainWindow):
         vbox_layout.addWidget(hbox_widget)
         vbox_layout.addWidget(start_scan_button)
         vbox_layout.addWidget(self.log_output_text_edit)
+        vbox_layout.addWidget(self.progress_bar)
 
         self.setCentralWidget(vbox_widget)
 
@@ -140,9 +147,16 @@ class MainWindow(QMainWindow):
             print("No directory selected!")
             return
 
+        # Reset the progress bar before starting a new scan.
+        self.progress_bar.setValue(0)
+
+        # Prepare a concurrent worker to scan files.
         worker = Worker(self.scanning_service, directory_path)
         worker.signals.message_signal.connect(self.log_output_text_edit.append)
+        worker.signals.progress_signal.connect(self.progress_bar.setValue)
         worker.signals.finished_signal.connect(
             lambda: self.log_output_text_edit.append("Scan finished.")
         )
+
+        # Start concurrent scanning.
         self.thread_pool.start(worker)

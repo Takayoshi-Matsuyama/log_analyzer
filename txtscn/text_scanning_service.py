@@ -49,12 +49,15 @@ class TextScanningService(ITextScanningService):
         """
         self._line_scanners[file_type] = scanner
 
-    def scan_files(self, root_path: str, message_signal: Signal(str)) -> None:
+    def scan_files(
+        self, root_path: str, message_signal: Signal(str), progress_signal: Signal(int)
+    ) -> None:
         """Scans all files under the given root path recursively.
 
         Args:
             root_path (str): The root path under which files are to be scanned.
             message_signal (Signal(str)): The signal to emit messages during scanning.
+            progress_signal (Signal(int)): The signal to emit progress updates during scanning.
         Returns:
             None
         """
@@ -70,11 +73,19 @@ class TextScanningService(ITextScanningService):
         if not os.access(root_path, os.R_OK):
             raise ValueError(f"Directory is not readable: {root_path}")
 
-        # Enumerate and scan files using the registered file scanner
+        # Calculate the total number of files to be scanned for progress tracking.
         # os.walk() is used to recursively enumerate files under the root path.
+        total_file_num = sum(len(filenames) for _, _, filenames in os.walk(root_path))
+
+        # Enumerate and scan files using the registered file scanner
+        scanned_file_num = 0
         for dirpath, _, filenames in os.walk(root_path):
             for filename in filenames:
                 file_path = os.path.join(dirpath, filename)
                 print(f"Scanning file: {file_path}")
                 message_signal.emit(f"Scanning file: {file_path}")
                 self._file_scanner.filter_file(file_path)
+                scanned_file_num += 1
+                print(f"Progress: {scanned_file_num}/{total_file_num}")
+                message_signal.emit(f"Progress: {scanned_file_num}/{total_file_num}")
+                progress_signal.emit(int(scanned_file_num / total_file_num * 100))
