@@ -16,9 +16,11 @@
 
 title Log Analyzer
 
+'==================== File Scanners ====================
+
 interface txtscn.IFileScanner
 {
-    +filter_file(file_path_name: string): (is_scanning_target: boolean, file_type: string)
+    +filter_file(file_path_name: string, mode: string): (is_scanning_target: boolean, file_type: string)
 }
 
 class txtscn.DefaultFileScanner
@@ -37,9 +39,11 @@ note left of txtscn.DefaultFileScanner::read_header_content
     optionally reads the header content of the file.
 end note
 
+'==================== Line Scanners ====================
+
 interface txtscn.ILineScanner
 {
-    +scan_line(line: string): string
+    +scan_line(line: string, mode: string): string
 }
 
 note left of txtscn.ILineScanner::scan_line
@@ -51,6 +55,22 @@ class app.CustomLineScanner {}
 
 txtscn.ILineScanner <|-- txtscn.DefaultLineScanner
 txtscn.ILineScanner <|-- app.CustomLineScanner
+
+'==================== Mode Providers ====================
+
+interface txtscn.IModeProvider
+{
+    +get_mode_list(): list<string>
+}
+
+class txtscn.DefaultModeProvider {}
+class app.CustomModeProvider {}
+
+txtscn.IModeProvider <|-- txtscn.DefaultModeProvider
+txtscn.IModeProvider <|-- app.CustomModeProvider
+
+
+'==================== Tool Factories ====================
 
 interface txtscn.IToolFactory
 {
@@ -66,22 +86,25 @@ txtscn.IToolFactory <|-- app.CustomToolFactory
 
 txtscn.DefaultToolFactory --> txtscn.DefaultFileScanner
 txtscn.DefaultToolFactory --> txtscn.DefaultLineScanner
+txtscn.DefaultToolFactory --> txtscn.DefaultModeProvider
 
 app.CustomToolFactory --> app.CustomFileScanner
 app.CustomToolFactory --> app.CustomLineScanner
+app.CustomToolFactory --> app.CustomModeProvider
+
+'==================== Text Scanning Service ====================
 
 interface txtscn.ITextScanningService
 {
     +register_file_scanner(scanner: txtscn.IFileScanner): void
     +register_line_scanner(file_type: string, scanner: txtscn.ILineScanner): void
-    +scan_files(root_path: string): void
+    +scan_files(root_path: string, mode: string): void
     -notify_scan_result_to_ui(msg: string): void
 }
 
 note left of txtscn.ITextScanningService::notify_scan_result_to_ui
     sends scan results to the UI using PySide's signal and slot mechanism.
 end note
-
 
 class txtscn.TextScanningService
 {
@@ -93,6 +116,8 @@ txtscn.ITextScanningService <|-- txtscn.TextScanningService
 txtscn.TextScanningService --> txtscn.IFileScanner
 txtscn.TextScanningService --> txtscn.ILineScanner
 
+'==================== Main Window ====================
+
 class PySide6.QMainWindow {}
 
 class txtscn.MainWindow
@@ -103,6 +128,8 @@ xtScanningService): void
 
 PySide6.QMainWindow <|-- txtscn.MainWindow
 txtscn.ITextScanningService --> txtscn.MainWindow
+
+'==================== Application Settings ====================
 
 entity app.setting_json
 {
@@ -118,6 +145,8 @@ app.FactoryProvider --> app.setting_json
 app.FactoryProvider --> txtscn.DefaultToolFactory
 app.FactoryProvider --> app.CustomToolFactory
 
+'==================== Fallback Main ====================
+
 class txtscn.FallbackMain
 {
     + start(): void
@@ -129,6 +158,8 @@ txtscn.FallbackMain --> txtscn.MainWindow
 
 note "FallbackMain is used when the txtscn package is executed standalone." as N1
 N1 .. txtscn.FallbackMain
+
+'==================== Application Main ====================
 
 class app.Main
 {
