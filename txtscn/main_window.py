@@ -58,7 +58,6 @@ class Worker(QRunnable):
             self.signals.message_signal.emit("No directory selected!")
             return
 
-        # TODO: Emit progress updates from the scanning service if available
         self.scanning_service.scan_files(
             self.directory_path,
             "default_mode",

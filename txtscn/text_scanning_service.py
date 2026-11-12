@@ -86,10 +86,17 @@ class TextScanningService(ITextScanningService):
         scanned_file_num = 0
         for dirpath, _, filenames in os.walk(root_path):
             for filename in filenames:
+                # The full file path
                 file_path = os.path.join(dirpath, filename)
                 print(f"Scanning file: {file_path}")
                 message_signal.emit(f"Scanning file: {file_path}")
+
+                # Filter the file
                 self._file_scanner.filter_file(file_path, mode)
+
+                # TODO: Scan lines
+
+                # Report progress
                 scanned_file_num += 1
                 print(f"Progress: {scanned_file_num}/{total_file_num}")
                 message_signal.emit(f"Progress: {scanned_file_num}/{total_file_num}")
