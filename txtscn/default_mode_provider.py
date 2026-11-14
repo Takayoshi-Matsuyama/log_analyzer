@@ -19,9 +19,9 @@ class DefaultModeProvider(IModeProvider):
     """Represents the default mode provider."""
 
     def get_mode(self) -> str:
-        """Returns the default scanning mode.
+        """Returns the default analysis mode.
 
         Returns:
-            str: The default scanning mode.
+            str: The default analysis mode.
         """
         return "default_mode"

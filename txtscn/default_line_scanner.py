@@ -23,7 +23,7 @@ class DefaultLineScanner(ILineScanner):
 
         Args:
             line (str): The line of text to be scanned.
-            mode (str): The scanning mode to be used.
+            mode (str): The analysis mode.
         Returns:
             str: The report text.
         """

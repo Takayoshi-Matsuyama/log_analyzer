@@ -27,6 +27,17 @@ class TextScanningService(ITextScanningService):
         """Initializes the text scanning service."""
         self._file_scanner = None
         self._line_scanners = dict()
+        self._mode_provider = None
+
+    def register_mode_provider(self, provider) -> None:
+        """Registers a mode provider.
+
+        Args:
+            provider (IModeProvider): The mode provider to be registered.
+        Returns:
+            None
+        """
+        self._mode_provider = provider
 
     def register_file_scanner(self, scanner: IFileScanner) -> None:
         """Registers a file scanner.
@@ -50,22 +61,24 @@ class TextScanningService(ITextScanningService):
         self._line_scanners[file_type] = scanner
 
     def scan_files(
-        self,
-        root_path: str,
-        mode: str,
-        message_signal: Signal(str),
-        progress_signal: Signal(int),
+        self, root_path: str, message_signal: Signal(str), progress_signal: Signal(int)
     ) -> None:
         """Scans all files under the given root path recursively.
 
         Args:
             root_path (str): The root path under which files are to be scanned.
-            mode (str): The scanning mode to be used.
             message_signal (Signal[str]): The signal to emit messages during scanning.
             progress_signal (Signal[int]): The signal to emit progress updates during scanning.
         Returns:
             None
         """
+        # Check if a mode provider is registered
+        if self._mode_provider is None:
+            raise ValueError("No mode provider registered.")
+
+        # Get the analysis mode from the registered mode provider
+        mode = self._mode_provider.get_mode()
+
         # Check if a file scanner is registered
         if self._file_scanner is None:
             raise ValueError("No file scanner registered.")

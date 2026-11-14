@@ -19,9 +19,9 @@ class CustomModeProvider(IModeProvider):
     """Represents a custom mode provider."""
 
     def get_mode(self) -> str:
-        """Returns the custom scanning mode.
+        """Returns the custom analysis mode.
 
         Returns:
-            str: The custom scanning mode.
+            str: The custom analysis mode.
         """
         return "custom_mode"

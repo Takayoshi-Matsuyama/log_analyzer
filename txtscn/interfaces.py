@@ -15,20 +15,15 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 
+from PySide6.QtCore import Signal
 
-class ILineScanner(ABC):
-    """Provides an interface for line scanning."""
+
+class IModeProvider(ABC):
+    """Provides an interface for mode providers."""
 
     @abstractmethod
-    def scan_line(self, line: str, mode: str) -> str:
-        """Scans the given line and returns the report as a string.
-
-        Args:
-            line (str): The line to be scanned.
-            mode (str): The scanning mode to be used.
-        Returns:
-            str: The report string.
-        """
+    def get_mode(self) -> str:
+        """Returns the analysis mode."""
         ...  # Should be implemented by concrete subclasses.
 
 
@@ -48,12 +43,28 @@ class IFileScanner(ABC):
         ...  # Should be implemented by concrete subclasses.
 
 
+class ILineScanner(ABC):
+    """Provides an interface for line scanning."""
+
+    @abstractmethod
+    def scan_line(self, line: str, mode: str) -> str:
+        """Scans the given line and returns the report as a string.
+
+        Args:
+            line (str): The line to be scanned.
+            mode (str): The scanning mode to be used.
+        Returns:
+            str: The report string.
+        """
+        ...  # Should be implemented by concrete subclasses.
+
+
 class IToolFactory(ABC):
     """Provides an interface for the tool factory."""
 
     @abstractmethod
-    def create_line_scanner(self) -> ILineScanner:
-        """Creates and returns a line scanner."""
+    def create_mode_provider(self) -> IModeProvider:
+        """Creates and returns a mode provider."""
         ...  # Should be implemented by concrete subclasses.
 
     @abstractmethod
@@ -61,18 +72,25 @@ class IToolFactory(ABC):
         """Creates and returns a file scanner."""
         ...  # Should be implemented by concrete subclasses.
 
-
-class IModeProvider(ABC):
-    """Provides an interface for mode providers."""
-
     @abstractmethod
-    def get_mode_list(self) -> list[str]:
-        """Returns the list of available modes."""
+    def create_line_scanner(self) -> ILineScanner:
+        """Creates and returns a line scanner."""
         ...  # Should be implemented by concrete subclasses.
 
 
 class ITextScanningService(ABC):
     """Provides an interface for the text scanning service."""
+
+    @abstractmethod
+    def register_mode_provider(self, provider: IModeProvider) -> None:
+        """Registers a mode provider.
+
+        Args:
+            provider (IModeProvider): The mode provider to be registered.
+        Returns:
+            None
+        """
+        ...  # Should be implemented by concrete subclasses.
 
     @abstractmethod
     def register_file_scanner(self, scanner: IFileScanner) -> None:
@@ -98,12 +116,15 @@ class ITextScanningService(ABC):
         ...  # Should be implemented by concrete subclasses.
 
     @abstractmethod
-    def scan_files(self, root_path: str, mode: str) -> None:
+    def scan_files(
+        self, root_path: str, message_signal: Signal(str), progress_signal: Signal(int)
+    ) -> None:
         """Scans all files under the given root path recursively using the specified mode.
 
         Args:
             root_path (str): The root path under which files are to be scanned.
-            mode (str): The scanning mode to be used.
+            message_signal (Signal[str]): The signal to emit messages during scanning.
+            progress_signal (Signal[int]): The signal to emit progress updates during scanning.
         Returns:
             None
         """

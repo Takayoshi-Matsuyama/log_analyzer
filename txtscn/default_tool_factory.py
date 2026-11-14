@@ -12,13 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from interfaces import IFileScanner, ILineScanner, IToolFactory
+from interfaces import IFileScanner, ILineScanner, IToolFactory, IModeProvider
+from default_mode_provider import DefaultModeProvider
 from default_file_scanner import DefaultFileScanner
 from default_line_scanner import DefaultLineScanner
 
 
 class DefaultToolFactory(IToolFactory):
     """Factory class for creating default tools."""
+
+    @staticmethod
+    def create_mode_provider() -> IModeProvider:
+        """Creates a default mode provider.
+
+        Returns:
+            IModeProvider: An instance of the default mode provider.
+        """
+        return DefaultModeProvider()
 
     @staticmethod
     def create_file_scanner() -> IFileScanner:

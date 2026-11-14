@@ -23,9 +23,9 @@ class DefaultFileScanner(IFileScanner):
 
         Args:
             file_path_name (str): The path and name of the file to be filtered.
-            mode (str): The scanning mode to be used.
+            mode (str): The analysis mode.
         Returns:
-            tuple[bool, str]: scanning target indicator and the file type.
+            tuple[bool, str]: analysis target indicator and the file type.
         """
 
         # Implement the default file filtering logic here

@@ -16,21 +16,29 @@
 
 title Log Analyzer
 
+'==================== Mode Providers ====================
+
+interface txtscn.IModeProvider
+{
+    +get_mode(): string
+}
+
+class txtscn.DefaultModeProvider {}
+class app.CustomModeProvider {}
+
+txtscn.IModeProvider <|-- txtscn.DefaultModeProvider
+txtscn.IModeProvider <|-- app.CustomModeProvider
+
 '==================== File Scanners ====================
 
 interface txtscn.IFileScanner
 {
     +filter_file(file_path_name: string, mode: string): (is_scanning_target: boolean, file_type: string)
+    -read_header_content(file_path_name: string, num_lines: int): string
 }
 
-class txtscn.DefaultFileScanner
-{
-    -read_header_content(file_path_name: string, num_lines: int): string
-}
-class app.CustomFileScanner
-{
-    -read_header_content(file_path_name: string, num_lines: int): string
-}
+class txtscn.DefaultFileScanner {}
+class app.CustomFileScanner {}
 
 txtscn.IFileScanner <|-- txtscn.DefaultFileScanner
 txtscn.IFileScanner <|-- app.CustomFileScanner
@@ -56,24 +64,11 @@ class app.CustomLineScanner {}
 txtscn.ILineScanner <|-- txtscn.DefaultLineScanner
 txtscn.ILineScanner <|-- app.CustomLineScanner
 
-'==================== Mode Providers ====================
-
-interface txtscn.IModeProvider
-{
-    +get_mode_list(): list<string>
-}
-
-class txtscn.DefaultModeProvider {}
-class app.CustomModeProvider {}
-
-txtscn.IModeProvider <|-- txtscn.DefaultModeProvider
-txtscn.IModeProvider <|-- app.CustomModeProvider
-
-
 '==================== Tool Factories ====================
 
 interface txtscn.IToolFactory
 {
+    +create_mode_provider(): txtscn.IModeProvider
     +create_file_scanner(): txtscn.IFileScanner
     +create_line_scanner(): txtscn.ILineScanner
 }
@@ -96,9 +91,10 @@ app.CustomToolFactory --> app.CustomModeProvider
 
 interface txtscn.ITextScanningService
 {
+    +register_mode_provider(provider: txtscn.IModeProvider): void
     +register_file_scanner(scanner: txtscn.IFileScanner): void
     +register_line_scanner(file_type: string, scanner: txtscn.ILineScanner): void
-    +scan_files(root_path: string, mode: string): void
+    +scan_files(root_path: string): void
     -notify_scan_result_to_ui(msg: string): void
 }
 
@@ -113,6 +109,7 @@ class txtscn.TextScanningService
 }
 
 txtscn.ITextScanningService <|-- txtscn.TextScanningService
+txtscn.TextScanningService --> txtscn.IModeProvider
 txtscn.TextScanningService --> txtscn.IFileScanner
 txtscn.TextScanningService --> txtscn.ILineScanner
 

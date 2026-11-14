@@ -60,7 +60,6 @@ class Worker(QRunnable):
 
         self.scanning_service.scan_files(
             self.directory_path,
-            "default_mode",
             self.signals.message_signal,
             self.signals.progress_signal,
         )
