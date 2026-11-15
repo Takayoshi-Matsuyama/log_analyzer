@@ -122,7 +122,9 @@ class TextScanningService(ITextScanningService):
                 with open(file_path, "r", encoding="utf-8") as f:
                     for line_num, line in enumerate(f, start=1):
                         report = line_scanner.scan_line(line, mode)
-                        message_signal.emit(f"Report: {report}")
+                        # Emit a message for the report if it is not empty
+                        if report:
+                            message_signal.emit(f"Report: {report}")
 
                 # Report progress
                 scanned_file_num += 1
