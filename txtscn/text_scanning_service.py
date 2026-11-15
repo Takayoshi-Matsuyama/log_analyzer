@@ -101,13 +101,28 @@ class TextScanningService(ITextScanningService):
             for filename in filenames:
                 # The full file path
                 file_path = os.path.join(dirpath, filename)
-                print(f"Scanning file: {file_path}")
-                message_signal.emit(f"Scanning file: {file_path}")
-
                 # Filter the file
-                self._file_scanner.filter_file(file_path, mode)
+                is_target, file_type = self._file_scanner.filter_file(file_path, mode)
+                message_signal.emit(
+                    f"Target: {is_target}, Type: {file_type}, Path: {file_path}"
+                )
 
-                # TODO: Scan lines
+                # Retrieve the line scanner for the file type, if available
+                line_scanner = self._line_scanners.get(file_type)
+                if not is_target:
+                    message_signal.emit(f"File is not a target: {file_path}")
+                    continue
+                if line_scanner is None:
+                    message_signal.emit(
+                        f"No line scanner registered for file type: {file_type}"
+                    )
+                    continue
+
+                # Scan lines
+                with open(file_path, "r", encoding="utf-8") as f:
+                    for line_num, line in enumerate(f, start=1):
+                        report = line_scanner.scan_line(line, mode)
+                        message_signal.emit(f"Report: {report}")
 
                 # Report progress
                 scanned_file_num += 1
