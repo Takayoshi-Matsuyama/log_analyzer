@@ -28,4 +28,8 @@ class DefaultLineScanner(ILineScanner):
             str: The report text.
         """
         # Implement the default line scanning logic here
-        return f"Scanned line: {line} with mode: {mode}"
+        upper_line = line.upper()
+        if "ERROR" in upper_line:
+            return line
+        else:
+            return ""
