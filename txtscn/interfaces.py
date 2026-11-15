@@ -117,7 +117,7 @@ class ITextScanningService(ABC):
 
     @abstractmethod
     def scan_files(
-        self, root_path: str, message_signal: Signal(str), progress_signal: Signal(int)
+        self, root_path: str, message_signal: Signal, progress_signal: Signal
     ) -> None:
         """Scans all files under the given root path recursively using the specified mode.
 
