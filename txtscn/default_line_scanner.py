@@ -29,7 +29,8 @@ class DefaultLineScanner(ILineScanner):
         """
         # Implement the default line scanning logic here
         upper_line = line.upper()
-        if "ERROR" in upper_line:
-            return line
+        if "ERROR" in upper_line or "CRITICAL" in upper_line:
+            # Remove newline characters from the line and return it.
+            return line.rstrip("\r\n")
         else:
             return ""
