@@ -12,9 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
+from pathlib import Path
+
+print(Path(__file__))
+print(Path(__file__).resolve())
+print(Path(__file__).resolve().parent.parent)
+print(type(Path(__file__).resolve().parent.parent))
+
+from txtscn.interfaces import IToolFactory  # noqa: F401, F403
+
 
 def main():
     print("Hello, World!")
+    import os
+
+    print(os.getcwd())
 
 
 if __name__ == "__main__":
