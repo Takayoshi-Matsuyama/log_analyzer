@@ -15,12 +15,12 @@
 import sys
 from pathlib import Path
 
-print(Path(__file__))
-print(Path(__file__).resolve())
-print(Path(__file__).resolve().parent.parent)
-print(type(Path(__file__).resolve().parent.parent))
+# Add the project root to sys.path to allow imports from the project
+project_root = Path(__file__).resolve().parent.parent
+if str(project_root) not in sys.path:
+    sys.path.append(str(project_root))
 
-from txtscn.interfaces import IToolFactory  # noqa: F401, F403
+from txtscn.interfaces import IToolFactory  # noqa: E402, F401, F403
 
 
 def main():
