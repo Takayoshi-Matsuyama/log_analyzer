@@ -23,7 +23,7 @@ class FactoryProvider:
     """Provides factory methods for creating instances of various components."""
 
     @staticmethod
-    def get_tool_factory() -> IToolFactory:
+    def create_tool_factory() -> IToolFactory:
         """Gets the tool factory instance.
 
         Returns:

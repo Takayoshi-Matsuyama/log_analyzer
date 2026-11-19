@@ -119,8 +119,7 @@ class PySide6.QMainWindow {}
 
 class txtscn.MainWindow
 {
-    + __init__(scanning_service: txtscn.ITe
-xtScanningService): void
+    + __init__(scanning_service: txtscn.ITextScanningService): void
 }
 
 PySide6.QMainWindow <|-- txtscn.MainWindow
@@ -133,9 +132,11 @@ entity app.setting_json
     "tool_factory": "app.CustomToolFactory"
 }
 
+'==================== Factory Provider ====================
+
 class app.FactoryProvider
  {
-    +get_tool_factory(): txtscn.IToolFactory
+    +create_tool_factory(): txtscn.IToolFactory
 }
 
 app.FactoryProvider --> app.setting_json
