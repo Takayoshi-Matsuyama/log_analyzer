@@ -21,6 +21,20 @@ if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
 
 from txtscn.interfaces import IToolFactory  # noqa: E402, F401, F403
+from txtscn.interfaces import ITextScanningService  # noqa: E402, F401, F403
+
+from app.factory_provider import FactoryProvider
+
+
+def setup_scanning_service() -> ITextScanningService:
+    """Sets up and returns the text scanning service.
+
+    Returns:
+        ITextScanningService: Text scanning service with default scanners.
+    """
+    factory_provider: FactoryProvider = FactoryProvider()
+    tool_factory: IToolFactory = factory_provider.get_tool_factory()
+    ...
 
 
 def main():
@@ -28,6 +42,8 @@ def main():
     import os
 
     print(os.getcwd())
+
+    setup_scanning_service()
 
 
 if __name__ == "__main__":

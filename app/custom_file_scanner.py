@@ -11,3 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+from txtscn.interfaces import IFileScanner
+
+
+class CustomFileScanner(IFileScanner):
+    """Represents a custom file scanner implementation."""
+
+    def filter_file(self, file_path_name: str, mode: str) -> tuple[bool, str]:
+        """Filters a file.
+
+        Args:
+            file_path_name (str): The path and name of the file to be filtered.
+            mode (str): The analysis mode.
+        Returns:
+            tuple[bool, str]: analysis target indicator and the file type.
+        """
+        return True, "custom"

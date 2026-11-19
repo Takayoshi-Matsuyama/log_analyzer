@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from interfaces import IFileScanner, ILineScanner, IToolFactory, IModeProvider
-from default_mode_provider import DefaultModeProvider
-from default_file_scanner import DefaultFileScanner
-from default_line_scanner import DefaultLineScanner
+from txtscn.interfaces import IFileScanner, ILineScanner, IToolFactory, IModeProvider
+from txtscn.default_mode_provider import DefaultModeProvider
+from txtscn.default_file_scanner import DefaultFileScanner
+from txtscn.default_line_scanner import DefaultLineScanner
 
 
 class DefaultToolFactory(IToolFactory):

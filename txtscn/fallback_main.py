@@ -13,13 +13,24 @@
 # limitations under the License.
 
 import sys
+from pathlib import Path
 
-from PySide6.QtWidgets import QApplication
+# Add the project root to sys.path to allow imports from the project
+project_root = Path(__file__).resolve().parent.parent
+if str(project_root) not in sys.path:
+    sys.path.append(str(project_root))
 
-from main_window import MainWindow
-from interfaces import IToolFactory, ILineScanner, IFileScanner, ITextScanningService
-from text_scanning_service import TextScanningService
-from default_tool_factory import DefaultToolFactory
+from PySide6.QtWidgets import QApplication  # noqa: E402
+
+from main_window import MainWindow  # noqa: E402
+from interfaces import (  # noqa: E402
+    IToolFactory,
+    ILineScanner,
+    IFileScanner,
+    ITextScanningService,
+)
+from text_scanning_service import TextScanningService  # noqa: E402
+from default_tool_factory import DefaultToolFactory  # noqa: E402
 
 
 def setup_scanning_service() -> ITextScanningService:

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from interfaces import IFileScanner
+from txtscn.interfaces import IFileScanner
 
 
 class DefaultFileScanner(IFileScanner):
@@ -28,5 +28,4 @@ class DefaultFileScanner(IFileScanner):
             tuple[bool, str]: analysis target indicator and the file type.
         """
 
-        # Implement the default file filtering logic here
         return True, "default"

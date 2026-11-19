@@ -11,3 +11,26 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+from txtscn.interfaces import ILineScanner
+
+
+class CustomLineScanner(ILineScanner):
+    """Represents a custom line scanner implementation."""
+
+    def scan_line(self, line: str, mode: str) -> str:
+        """Scans a single line of text.
+
+        Args:
+            line (str): The line of text to be scanned.
+            mode (str): The analysis mode.
+        Returns:
+            str: The report text.
+        """
+        # Implement the default line scanning logic here
+        upper_line = line.upper()
+        if "ERROR" in upper_line or "CRITICAL" in upper_line:
+            # Remove newline characters from the line and return it.
+            return line.rstrip("\r\n")
+        else:
+            return ""

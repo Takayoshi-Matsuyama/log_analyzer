@@ -14,6 +14,7 @@
 
 # Export the modules that should be accessible from the app side
 from .interfaces import *  # noqa: F401, F403
+from .default_tool_factory import *  # noqa: F401, F403
 
 # from .default_tool_factory import DefaultToolFactory  # noqa: F401, F403
 
