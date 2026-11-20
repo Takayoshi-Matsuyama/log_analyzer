@@ -14,24 +14,23 @@
 
 import sys
 from pathlib import Path
+from PySide6.QtWidgets import QApplication  # noqa: E402
 
 # Add the project root to sys.path to allow imports from the project
 project_root = Path(__file__).resolve().parent.parent
 if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
 
-from PySide6.QtWidgets import QApplication  # noqa: E402
-
-from main_window import MainWindow  # noqa: E402
-from interfaces import (  # noqa: E402
-    IToolFactory,
-    ILineScanner,
+from txtscn.interfaces import (  # noqa: E402
     IFileScanner,
+    ILineScanner,
     IModeProvider,
     ITextScanningService,
+    IToolFactory,
 )
-from text_scanning_service import TextScanningService  # noqa: E402
-from default_tool_factory import DefaultToolFactory  # noqa: E402
+from txtscn.text_scanning_service import TextScanningService  # noqa: E402
+from txtscn.main_window import MainWindow  # noqa: E402
+from txtscn.default_tool_factory import DefaultToolFactory  # noqa: E402
 
 
 def setup_scanning_service() -> ITextScanningService:

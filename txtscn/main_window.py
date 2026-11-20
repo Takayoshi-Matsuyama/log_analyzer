@@ -27,7 +27,7 @@ from PySide6.QtWidgets import (
 )
 
 
-from interfaces import ITextScanningService
+from txtscn.interfaces import ITextScanningService
 
 
 class WorkerSignals(QObject):

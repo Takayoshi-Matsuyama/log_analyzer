@@ -15,8 +15,5 @@
 # Export the modules that should be accessible from the app side
 from .interfaces import *  # noqa: F401, F403
 from .default_tool_factory import *  # noqa: F401, F403
-
-# from .default_tool_factory import DefaultToolFactory  # noqa: F401, F403
-
-# from .text_scanning_service import TxtScanningService  # noqa: F401, F403
-# from .main_window import MainWindow  # noqa: F401, F403
+from .text_scanning_service import TextScanningService  # noqa: F401, F403
+from .main_window import MainWindow  # noqa: F401, F403

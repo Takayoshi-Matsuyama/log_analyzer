@@ -14,8 +14,8 @@
 
 import json
 
-from txtscn.interfaces import IToolFactory
 from txtscn.default_tool_factory import DefaultToolFactory
+from txtscn.interfaces import IToolFactory
 from app.custom_tool_factory import CustomToolFactory
 
 

@@ -14,6 +14,7 @@
 
 import sys
 from pathlib import Path
+from PySide6.QtWidgets import QApplication  # noqa: E402
 
 # Add the project root to sys.path to allow imports from the project
 project_root = Path(__file__).resolve().parent.parent
@@ -28,7 +29,7 @@ from txtscn.interfaces import (  # noqa: E402, F401, F403
     IToolFactory,
 )
 from txtscn.text_scanning_service import TextScanningService  # noqa: E402, F401, F403
-
+from txtscn.main_window import MainWindow  # noqa: E402, F401, F403
 from app.factory_provider import FactoryProvider  # noqa: E402, F401, F403
 
 
@@ -53,14 +54,17 @@ def setup_scanning_service() -> ITextScanningService:
 
 
 def main():
-    print("Hello, World!")
-    import os
-
-    print(os.getcwd())
+    """Effective main entry point for the application."""
 
     text_scanning_service: ITextScanningService = setup_scanning_service()
-    ...
+
+    app = QApplication(sys.argv)
+    window = MainWindow(scanning_service=text_scanning_service)
+    window.show()
+
+    sys.exit(app.exec())
 
 
+# Entry point for main application
 if __name__ == "__main__":
     main()
