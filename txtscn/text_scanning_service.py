@@ -17,7 +17,7 @@ from pathlib import Path
 
 from PySide6.QtCore import Signal
 
-from interfaces import ITextScanningService, IFileScanner, ILineScanner
+from txtscn.interfaces import ITextScanningService, IFileScanner, ILineScanner
 
 
 class TextScanningService(ITextScanningService):

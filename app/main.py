@@ -20,10 +20,16 @@ project_root = Path(__file__).resolve().parent.parent
 if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
 
-from txtscn.interfaces import IToolFactory, IModeProvider  # noqa: E402, F401, F403
-from txtscn.interfaces import ITextScanningService  # noqa: E402, F401, F403
+from txtscn.interfaces import (  # noqa: E402, F401, F403
+    IFileScanner,
+    ILineScanner,
+    IModeProvider,
+    ITextScanningService,
+    IToolFactory,
+)
+from txtscn.text_scanning_service import TextScanningService  # noqa: E402, F401, F403
 
-from app.factory_provider import FactoryProvider
+from app.factory_provider import FactoryProvider  # noqa: E402, F401, F403
 
 
 def setup_scanning_service() -> ITextScanningService:
@@ -35,7 +41,15 @@ def setup_scanning_service() -> ITextScanningService:
     factory_provider: FactoryProvider = FactoryProvider()
     tool_factory: IToolFactory = factory_provider.create_tool_factory()
     mode_provider: IModeProvider = tool_factory.create_mode_provider()
-    ...
+    line_scanner: ILineScanner = tool_factory.create_line_scanner()
+    file_scanner: IFileScanner = tool_factory.create_file_scanner()
+
+    text_scanning_service: ITextScanningService = TextScanningService()
+    text_scanning_service.register_mode_provider(mode_provider)
+    text_scanning_service.register_file_scanner(file_scanner)
+    text_scanning_service.register_line_scanner("default", line_scanner)
+
+    return text_scanning_service
 
 
 def main():
@@ -44,7 +58,8 @@ def main():
 
     print(os.getcwd())
 
-    setup_scanning_service()
+    text_scanning_service: ITextScanningService = setup_scanning_service()
+    ...
 
 
 if __name__ == "__main__":

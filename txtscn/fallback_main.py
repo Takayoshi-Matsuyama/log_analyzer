@@ -27,6 +27,7 @@ from interfaces import (  # noqa: E402
     IToolFactory,
     ILineScanner,
     IFileScanner,
+    IModeProvider,
     ITextScanningService,
 )
 from text_scanning_service import TextScanningService  # noqa: E402
@@ -40,7 +41,7 @@ def setup_scanning_service() -> ITextScanningService:
         ITextScanningService: Text scanning service with default scanners.
     """
     tool_factory: IToolFactory = DefaultToolFactory()
-    mode_provider = tool_factory.create_mode_provider()
+    mode_provider: IModeProvider = tool_factory.create_mode_provider()
     line_scanner: ILineScanner = tool_factory.create_line_scanner()
     file_scanner: IFileScanner = tool_factory.create_file_scanner()
 
