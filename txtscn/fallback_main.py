@@ -41,8 +41,8 @@ def setup_scanning_service() -> ITextScanningService:
     """
     tool_factory: IToolFactory = DefaultToolFactory()
     mode_provider: IModeProvider = tool_factory.create_mode_provider()
-    line_scanner: ILineScanner = tool_factory.create_line_scanner()
     file_scanner: IFileScanner = tool_factory.create_file_scanner()
+    line_scanner: ILineScanner = tool_factory.create_line_scanner()
 
     text_scanning_service: ITextScanningService = TextScanningService()
     text_scanning_service.register_mode_provider(mode_provider)
