@@ -75,17 +75,17 @@ class CustomTextEdit(QTextEdit):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-    def contextMenuEvent(self, event):
+    def contextMenuEvent(self, event) -> None:
         """Handles the context menu event for the custom text edit."""
         # Create the standard context menu
-        context_menu = self.createStandardContextMenu()
+        context_menu = self.createStandardContextMenu(event.pos())
 
         # Add custom actions to the context menu
         context_menu.addSeparator()
         clear_action = context_menu.addAction("Clear", self.clear)
 
         # Disable if there is no text
-        clear_action.setEnabled(bool(self.toPlainText()))
+        clear_action.setEnabled(not self.document().isEmpty())
 
         # Show the context menu
         context_menu.exec(event.globalPos())
