@@ -69,6 +69,31 @@ class Worker(QRunnable):
         self.signals.finished_signal.emit()
 
 
+class CustomTextEdit(QTextEdit):
+    """Custom QTextEdit with additional functionality."""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+    def contextMenuEvent(self, event):
+        """Handles the context menu event for the custom text edit."""
+        # Create the standard context menu
+        context_menu = self.createStandardContextMenu()
+
+        # Add custom actions to the context menu
+        context_menu.addSeparator()
+        clear_action = context_menu.addAction("Clear", self.clear)
+
+        # Disable if there is no text
+        clear_action.setEnabled(bool(self.toPlainText()))
+
+        # Show the context menu
+        context_menu.exec(event.globalPos())
+
+        # Delete the context menu after it is used
+        context_menu.deleteLater()
+
+
 class MainWindow(QMainWindow):
     """Represents the main window of the application."""
 
@@ -105,7 +130,7 @@ class MainWindow(QMainWindow):
         start_scan_button.clicked.connect(self.on_start_scan_button_clicked)
 
         # --- Text Edit (Log Output) ---
-        self.log_output_text_edit = QTextEdit(self)
+        self.log_output_text_edit = CustomTextEdit(self)
         self.log_output_text_edit.setReadOnly(True)
 
         # --- Progress Bar ---
