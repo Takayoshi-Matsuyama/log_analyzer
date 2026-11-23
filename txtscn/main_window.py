@@ -146,22 +146,32 @@ class MainWindow(QMainWindow):
         self.log_output_text_edit = CustomTextEdit(self)
         self.log_output_text_edit.setReadOnly(True)
 
+        # --- Text Edit (File Content) ---
+        self.file_content_text_edit = CustomTextEdit(self)
+        self.file_content_text_edit.setReadOnly(True)
+
         # --- Progress Bar ---
         self.progress_bar = QProgressBar(self)
 
         # --- Layout ---
-        hbox_layout = QHBoxLayout()
-        hbox_widget = QWidget()
-        hbox_widget.setLayout(hbox_layout)
-        hbox_layout.addWidget(self.directory_path_line_edit)
-        hbox_layout.addWidget(select_directory_button)
+        path_hbox_layout = QHBoxLayout()
+        path_hbox_widget = QWidget()
+        path_hbox_widget.setLayout(path_hbox_layout)
+        path_hbox_layout.addWidget(self.directory_path_line_edit)
+        path_hbox_layout.addWidget(select_directory_button)
+
+        output_hbox_layout = QHBoxLayout()
+        output_hbox_widget = QWidget()
+        output_hbox_widget.setLayout(output_hbox_layout)
+        output_hbox_layout.addWidget(self.log_output_text_edit)
+        output_hbox_layout.addWidget(self.file_content_text_edit)
 
         vbox_layout = QVBoxLayout()
         vbox_widget = QWidget()
         vbox_widget.setLayout(vbox_layout)
-        vbox_layout.addWidget(hbox_widget)
+        vbox_layout.addWidget(path_hbox_widget)
         vbox_layout.addWidget(start_scan_button)
-        vbox_layout.addWidget(self.log_output_text_edit)
+        vbox_layout.addWidget(output_hbox_widget)
         vbox_layout.addWidget(self.progress_bar)
 
         self.setCentralWidget(vbox_widget)
