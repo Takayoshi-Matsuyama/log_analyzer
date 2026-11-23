@@ -72,8 +72,9 @@ class Worker(QRunnable):
 class CustomTextEdit(QTextEdit):
     """Custom QTextEdit with additional functionality."""
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, main_window=None):
         super().__init__(parent)
+        self.main_window = main_window
 
     def contextMenuEvent(self, event) -> None:
         """Handles the context menu event for the custom text edit."""
@@ -103,6 +104,10 @@ class CustomTextEdit(QTextEdit):
         """Shows the content of the file in the log output text edit."""
         cursor = self.textCursor()
         print(f"{type(cursor)}=")  # class 'PySide6.QtGui.QTextCursor'
+        print(
+            f"{type(self.main_window)=}"
+        )  # type(self.main_window)=<class 'txtscn.main_window.MainWindow'>
+        self.main_window.file_content_text_edit.append("Showing file content...")
         # TODO: Open the file and display its content in the log output text
         ...
 
@@ -143,11 +148,11 @@ class MainWindow(QMainWindow):
         start_scan_button.clicked.connect(self.on_start_scan_button_clicked)
 
         # --- Text Edit (Log Output) ---
-        self.log_output_text_edit = CustomTextEdit(self)
+        self.log_output_text_edit = CustomTextEdit(self, main_window=self)
         self.log_output_text_edit.setReadOnly(True)
 
         # --- Text Edit (File Content) ---
-        self.file_content_text_edit = CustomTextEdit(self)
+        self.file_content_text_edit = CustomTextEdit(self, main_window=self)
         self.file_content_text_edit.setReadOnly(True)
 
         # --- Progress Bar ---
