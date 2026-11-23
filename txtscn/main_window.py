@@ -178,9 +178,12 @@ class MainWindow(QMainWindow):
         worker = Worker(self.scanning_service, directory_path)
         worker.signals.message_signal.connect(self.log_output_text_edit.append)
         worker.signals.progress_signal.connect(self.progress_bar.setValue)
-        worker.signals.finished_signal.connect(
-            lambda: self.log_output_text_edit.append("Scan finished.")
-        )
+        worker.signals.finished_signal.connect(self.worker_finished)
 
         # Start concurrent scanning.
         self.thread_pool.start(worker)
+
+    def worker_finished(self):
+        """Handles the worker finished signal."""
+        print("Worker finished.")
+        self.log_output_text_edit.append("Worker finished.")

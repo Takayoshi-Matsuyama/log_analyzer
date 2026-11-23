@@ -103,9 +103,7 @@ class TextScanningService(ITextScanningService):
                 file_path = os.path.join(dirpath, filename)
                 # Filter the file
                 is_target, file_type = self._file_scanner.filter_file(file_path, mode)
-                message_signal.emit(
-                    f"Target: {is_target}, Type: {file_type}, Path: {file_path}"
-                )
+                message_signal.emit(f"{filename} - {file_path}")
 
                 # Retrieve the line scanner for the file type, if available
                 line_scanner = self._line_scanners.get(file_type)
@@ -124,7 +122,7 @@ class TextScanningService(ITextScanningService):
                         report = line_scanner.scan_line(line, mode)
                         # Emit a message for the report if it is not empty
                         if report:
-                            message_signal.emit(f"Report: {report}")
+                            message_signal.emit(f"{line_num}: {report}")
 
                 # Report progress
                 scanned_file_num += 1
