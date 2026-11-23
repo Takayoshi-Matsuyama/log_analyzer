@@ -82,16 +82,29 @@ class CustomTextEdit(QTextEdit):
 
         # Add custom actions to the context menu
         context_menu.addSeparator()
+        show_file_content_action = context_menu.addAction(
+            "Show File Content", self.show_file_content
+        )
+        context_menu.addSeparator()
         clear_action = context_menu.addAction("Clear", self.clear)
 
         # Disable if there is no text
-        clear_action.setEnabled(not self.document().isEmpty())
+        isNotEmpty = not self.document().isEmpty()
+        show_file_content_action.setEnabled(isNotEmpty)
+        clear_action.setEnabled(isNotEmpty)
 
         # Show the context menu
         context_menu.exec(event.globalPos())
 
         # Delete the context menu after it is used
         context_menu.deleteLater()
+
+    def show_file_content(self):
+        """Shows the content of the file in the log output text edit."""
+        cursor = self.textCursor()
+        print(f"{type(cursor)}=")  # class 'PySide6.QtGui.QTextCursor'
+        # TODO: Open the file and display its content in the log output text
+        ...
 
 
 class MainWindow(QMainWindow):
