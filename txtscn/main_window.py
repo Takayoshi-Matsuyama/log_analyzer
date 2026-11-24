@@ -33,9 +33,17 @@ from txtscn.interfaces import ITextScanningService
 class WorkerSignals(QObject):
     """Represents the signals available for a worker thread."""
 
-    message_signal = Signal(str)  # Signal to indicate a message from the worker
-    progress_signal = Signal(int)  # Signal to indicate progress percentage
-    finished_signal = Signal()  # Signal to indicate the worker has finished
+    # Signal to indicate that scanning a new file has started (file name, path)
+    new_file_signal = Signal(str, str)
+    # Signal to indicate a line has been scanned (line number, report message)
+    line_scanned_signal = Signal(int, str)
+
+    # Signal to indicate a message from the worker
+    message_signal = Signal(str)
+    # Signal to indicate progress percentage
+    progress_signal = Signal(int)
+    # Signal to indicate the worker has finished
+    finished_signal = Signal()
 
 
 class Worker(QRunnable):
@@ -206,12 +214,32 @@ class MainWindow(QMainWindow):
 
         # Prepare a concurrent worker to scan files.
         worker = Worker(self.scanning_service, directory_path)
+        worker.signals.new_file_signal.connect(self.on_new_file)
+        worker.signals.line_scanned_signal.connect(self.on_line_scanned)
         worker.signals.message_signal.connect(self.log_output_text_edit.append)
         worker.signals.progress_signal.connect(self.progress_bar.setValue)
         worker.signals.finished_signal.connect(self.worker_finished)
 
         # Start concurrent scanning.
         self.thread_pool.start(worker)
+
+    def on_new_file(self, file_name: str, file_path: str):
+        """Handles the new file signal.
+
+        Args:
+            file_name (str): The name of the new file.
+            file_path (str): The path to the new file.
+        """
+        ...
+
+    def on_line_scanned(self, line_number: int, report_message: str):
+        """Handles the line scanned signal.
+
+        Args:
+            line_number (int): The number of the scanned line.
+            report_message (str): The report message for the scanned line.
+        """
+        ...
 
     def worker_finished(self):
         """Handles the worker finished signal."""
