@@ -104,10 +104,12 @@ class CustomTextEdit(QTextEdit):
         """Shows the content of the file in the log output text edit."""
         cursor = self.textCursor()
         print(f"{type(cursor)}=")  # class 'PySide6.QtGui.QTextCursor'
+        # Get the current line index (0-based, first line is 0)
+        line_index = cursor.blockNumber()
         print(
             f"{type(self.main_window)=}"
         )  # type(self.main_window)=<class 'txtscn.main_window.MainWindow'>
-        self.main_window.file_content_text_edit.append("Showing file content...")
+        self.main_window.file_content_text_edit.append(f"Line index: {line_index}")
         # TODO: Open the file and display its content in the log output text
         ...
 
