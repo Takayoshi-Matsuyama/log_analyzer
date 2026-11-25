@@ -68,6 +68,8 @@ class Worker(QRunnable):
 
         self.scanning_service.scan_files(
             self.directory_path,
+            self.signals.new_file_signal,
+            self.signals.line_scanned_signal,
             self.signals.message_signal,
             self.signals.progress_signal,
         )
@@ -230,7 +232,7 @@ class MainWindow(QMainWindow):
             file_name (str): The name of the new file.
             file_path (str): The path to the new file.
         """
-        ...
+        self.log_output_text_edit.append(f"{file_name} - {file_path}")
 
     def on_line_scanned(self, line_number: int, report_message: str):
         """Handles the line scanned signal.
@@ -239,7 +241,7 @@ class MainWindow(QMainWindow):
             line_number (int): The number of the scanned line.
             report_message (str): The report message for the scanned line.
         """
-        ...
+        self.log_output_text_edit.append(f"{line_number}: {report_message}")
 
     def worker_finished(self):
         """Handles the worker finished signal."""

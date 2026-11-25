@@ -61,17 +61,26 @@ class TextScanningService(ITextScanningService):
         self._line_scanners[file_type] = scanner
 
     def scan_files(
-        self, root_path: str, message_signal: Signal, progress_signal: Signal
+        self,
+        root_path: str,
+        new_file_signal: Signal,
+        line_scanned_signal: Signal,
+        message_signal: Signal,
+        progress_signal: Signal,
     ) -> None:
         """Scans all files under the given root path recursively.
 
         Args:
             root_path (str): The root path under which files are to be scanned.
+            new_file_signal (Signal[str, str]): Indicates a new file scan (file name, path).
+            line_scanned_signal (Signal[int, str]): Indicates a line has been scanned (line number, report).
             message_signal (Signal[str]): The signal to emit messages during scanning.
             progress_signal (Signal[int]): The signal to emit progress updates during scanning.
         Returns:
             None
         """
+        message_signal.emit(f"Scanning files under: {root_path}")
+
         # Check if a mode provider is registered
         if self._mode_provider is None:
             raise ValueError("No mode provider registered.")
@@ -103,7 +112,6 @@ class TextScanningService(ITextScanningService):
                 file_path = os.path.join(dirpath, filename)
                 # Filter the file
                 is_target, file_type = self._file_scanner.filter_file(file_path, mode)
-                message_signal.emit(f"{filename} - {file_path}")
 
                 # Retrieve the line scanner for the file type, if available
                 line_scanner = self._line_scanners.get(file_type)
@@ -118,11 +126,12 @@ class TextScanningService(ITextScanningService):
 
                 # Scan lines
                 with open(file_path, "r", encoding="utf-8") as f:
+                    new_file_signal.emit(filename, file_path)
                     for line_num, line in enumerate(f, start=1):
                         report = line_scanner.scan_line(line, mode)
                         # Emit a message for the report if it is not empty
                         if report:
-                            message_signal.emit(f"{line_num}: {report}")
+                            line_scanned_signal.emit(line_num, report)
 
                 # Report progress
                 scanned_file_num += 1
