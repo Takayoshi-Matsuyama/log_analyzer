@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from dataclasses import dataclass
+
 from PySide6.QtCore import QRunnable, QThreadPool, QObject, Signal, Slot
 from PySide6.QtWidgets import (
     QFileDialog,
@@ -124,6 +126,15 @@ class CustomTextEdit(QTextEdit):
         ...
 
 
+@dataclass
+class TextEditFileInfo:
+    """Represents information about a file."""
+
+    file_path: str
+    start_line: int
+    end_line: int
+
+
 class MainWindow(QMainWindow):
     """Represents the main window of the application."""
 
@@ -136,6 +147,10 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.scanning_service = scanning_service
         self.thread_pool = QThreadPool()
+
+        # TODO: Map range of output line numbers to file paths
+        self._file_info_list: list[TextEditFileInfo] = []
+
         self.setWindowTitle("Log Analyzer")
         self.resize(800, 600)
 
@@ -232,7 +247,9 @@ class MainWindow(QMainWindow):
             file_name (str): The name of the new file.
             file_path (str): The path to the new file.
         """
+        line_index = self.log_output_text_edit.textCursor().blockNumber()
         self.log_output_text_edit.append(f"{file_name} - {file_path}")
+        self._file_info_list.append(TextEditFileInfo(file_name, line_index, line_index))
 
     def on_line_scanned(self, line_number: int, report_message: str):
         """Handles the line scanned signal.
